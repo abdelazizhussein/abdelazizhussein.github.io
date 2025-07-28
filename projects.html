@@ -1,94 +1,185 @@
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <title>Projects | Your Name</title>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-  <link rel="stylesheet" href="assets/css/main.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projects</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
     body {
-      padding: 2em;
       font-family: sans-serif;
+      margin: 0;
+      background-color: #f5f5f5;
+      color: #333;
     }
-    nav#project-nav {
+
+    header {
+      background-color: #2c3e50;
+      padding: 1em;
       text-align: center;
-      margin-bottom: 2em;
+      color: white;
+      position: relative;
     }
-    nav#project-nav ul {
-      list-style: none;
-      padding: 0;
-      display: inline-flex;
-      gap: 1em;
-    }
-    nav#project-nav ul li a {
-      padding: 0.5em 1em;
-      background: #1f1815;
+
+    .back-button {
+      position: absolute;
+      left: 1em;
+      top: 1em;
       color: white;
       text-decoration: none;
-      border-radius: 0.25em;
+      font-size: 0.9em;
+      background-color: #34495e;
+      padding: 0.4em 0.8em;
+      border-radius: 5px;
     }
-    nav#project-nav ul li a:hover {
-      background: #c9a36c;
+
+    nav {
+      display: flex;
+      justify-content: center;
+      background: #ecf0f1;
+      padding: 0.5em;
+      gap: 1em;
+      border-bottom: 1px solid #ccc;
     }
-    section.project {
+
+    nav button {
+      padding: 0.5em 1em;
+      border: none;
+      background: #bdc3c7;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    nav button.active {
+      background-color: #3498db;
+      color: white;
+    }
+
+    .project {
       display: none;
+      padding: 2em;
+      max-width: 800px;
+      margin: auto;
     }
-    section.project.active {
+
+    .project.active {
       display: block;
     }
-    .project-images img {
+
+    .card {
+      background: white;
+      padding: 1.5em;
+      margin: 1em 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .project img.preview {
       max-width: 100%;
       height: auto;
+      border-radius: 4px;
       margin-bottom: 1em;
+    }
+
+    .links {
+      display: flex;
+      align-items: center;
+      gap: 1.5em;
+      margin-bottom: 1em;
+    }
+
+    .links a {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      background: #e0e0e0;
+      padding: 0.5em 1em;
+      border-radius: 6px;
+      color: #2c3e50;
+      transition: background 0.2s;
+    }
+
+    .links a:hover {
+      background: #d0d0d0;
+    }
+
+    .links i {
+      margin-right: 0.5em;
     }
   </style>
 </head>
 <body>
 
-  <!-- Top Nav -->
-  <nav id="project-nav">
-    <ul>
-      <li><a href="#" onclick="showProject('proj1')">Project 1</a></li>
-      <li><a href="#" onclick="showProject('proj2')">Project 2</a></li>
-      <!-- Add more projects as needed -->
-    </ul>
+  <header>
+    <a href="index.html" class="back-button">&larr; Back to Main</a>
+    <h1>My Projects</h1>
+  </header>
+
+  <nav>
+    <button onclick="showProject('proj1')" class="active">Project 1</button>
+    <button onclick="showProject('proj2')">Project 2</button>
   </nav>
 
-  <!-- Project Sections -->
   <section id="proj1" class="project active">
-    <div class="project-images">
-      <img src="images/proj1-figure.jpg" alt="Project 1 screenshot">
+    <div class="card">
+      <img src="images/project1.jpg" alt="Project 1 image" class="preview">
+      <div class="links">
+        <a href="https://github.com/yourusername/project1" target="_blank">
+          <i class="fab fa-github"></i> GitHub Repo
+        </a>
+        <a href="pdfs/project1-paper.pdf" target="_blank">
+          <i class="fas fa-file-pdf"></i> View Paper
+        </a>
+      </div>
+      <div class="card">
+        <h2>Plain Description</h2>
+        <p>This project investigates how...</p>
+      </div>
+      <div class="card">
+        <h2>Scientific Summary</h2>
+        <p>We develop a method for...</p>
+      </div>
+      <div class="card">
+        <h2>My Experience</h2>
+        <p>While working on this, I learned...</p>
+      </div>
     </div>
-    <p><strong>GitHub:</strong> <a href="https://github.com/user/project1">View Repository</a></p>
-    <p><strong>Paper:</strong> <a href="https://arxiv.org/abs/1234.56789">Read on arXiv</a></p>
-    <h3>Plain Words Description</h3>
-    <p>This project analyzes dark matter distribution near supermassive black holes using simulations.</p>
-    <h3>Scientific Description</h3>
-    <p>We solve the coupled system of electron cooling and advection in relativistic AGN jets, constrained by synchrotron observables...</p>
-    <h3>Reflection</h3>
-    <p>This was my first large-scale numerical project. I learned a lot about memory optimization and reproducibility during this work.</p>
   </section>
 
   <section id="proj2" class="project">
-    <div class="project-images">
-      <img src="images/proj2-figure.jpg" alt="Project 2 screenshot">
+    <div class="card">
+      <img src="images/project2.jpg" alt="Project 2 image" class="preview">
+      <div class="links">
+        <a href="https://github.com/yourusername/project2" target="_blank">
+          <i class="fab fa-github"></i> GitHub Repo
+        </a>
+        <a href="pdfs/project2-paper.pdf" target="_blank">
+          <i class="fas fa-file-pdf"></i> View Paper
+        </a>
+      </div>
+      <div class="card">
+        <h2>Plain Description</h2>
+        <p>This project explores...</p>
+      </div>
+      <div class="card">
+        <h2>Scientific Summary</h2>
+        <p>We simulate...</p>
+      </div>
+      <div class="card">
+        <h2>My Experience</h2>
+        <p>This helped me understand...</p>
+      </div>
     </div>
-    <p><strong>GitHub:</strong> <a href="https://github.com/user/project2">View Repository</a></p>
-    <p><strong>Paper:</strong> <a href="#">Coming Soon</a></p>
-    <h3>Plain Words Description</h3>
-    <p>This project models the gamma-ray emission from dark matter in the Milky Way’s center using FIRE-2 simulations.</p>
-    <h3>Scientific Description</h3>
-    <p>We construct an adiabatically contracted profile from FIRE-2 baryon distributions and integrate the J-factor across angular windows...</p>
-    <h3>Reflection</h3>
-    <p>This project taught me how to combine simulation and theory in a practical framework for observational prediction.</p>
   </section>
 
   <script>
     function showProject(id) {
-      document.querySelectorAll("section.project").forEach(s => s.classList.remove("active"));
-      document.getElementById(id).classList.add("active");
+      document.querySelectorAll('.project').forEach(p => p.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+      const idx = id === 'proj1' ? 0 : 1;
+      document.querySelectorAll('nav button')[idx].classList.add('active');
     }
   </script>
-
 </body>
 </html>
