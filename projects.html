@@ -1,185 +1,708 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Projects</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-  <style>
-    body {
-      font-family: sans-serif;
-      margin: 0;
-      background-color: #f5f5f5;
-      color: #333;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Projects - Abdelaziz Hussein</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    header {
-      background-color: #2c3e50;
-      padding: 1em;
-      text-align: center;
-      color: white;
-      position: relative;
-    }
+        body {
+            font-family: 'Source Sans Pro', Helvetica, sans-serif;
+            font-weight: 300;
+            line-height: 1.75em;
+            color: #fff;
+            background: #000;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            transition: background-image 1s ease-in-out;
+        }
 
-    .back-button {
-      position: absolute;
-      left: 1em;
-      top: 1em;
-      color: white;
-      text-decoration: none;
-      font-size: 0.9em;
-      background-color: #34495e;
-      padding: 0.4em 0.8em;
-      border-radius: 5px;
-    }
+        /* Background images for different projects */
+        body.dark-matter {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
+        }
 
-    nav {
-      display: flex;
-      justify-content: center;
-      background: #ecf0f1;
-      padding: 0.5em;
-      gap: 1em;
-      border-bottom: 1px solid #ccc;
-    }
+        body.stellar-physics {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1502134249126-9f3755a50d78?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
+        }
 
-    nav button {
-      padding: 0.5em 1em;
-      border: none;
-      background: #bdc3c7;
-      border-radius: 4px;
-      cursor: pointer;
-    }
+        body.galactic-dynamics {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
+        }
 
-    nav button.active {
-      background-color: #3498db;
-      color: white;
-    }
+        body.cosmology {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
+        }
 
-    .project {
-      display: none;
-      padding: 2em;
-      max-width: 800px;
-      margin: auto;
-    }
+        strong, b {
+            color: #ddd;
+            font-weight: 400;
+        }
 
-    .project.active {
-      display: block;
-    }
+        h1, h2, h3 {
+            color: #fff;
+            font-weight: 300;
+            line-height: 1.3em;
+            margin: 0 0 1em 0;
+        }
 
-    .card {
-      background: white;
-      padding: 1.5em;
-      margin: 1em 0;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
+        h1 { font-size: 2.5em; }
+        h2 { font-size: 2em; }
+        h3 { font-size: 1.35em; }
 
-    .project img.preview {
-      max-width: 100%;
-      height: auto;
-      border-radius: 4px;
-      margin-bottom: 1em;
-    }
+        .container {
+            max-width: 68em;
+            margin: 0 auto;
+            padding: 0 2em;
+        }
 
-    .links {
-      display: flex;
-      align-items: center;
-      gap: 1.5em;
-      margin-bottom: 1em;
-    }
+        /* Header */
+        .header {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: solid 1px rgba(255, 255, 255, 0.2);
+            padding: 3em 0;
+            text-align: center;
+        }
 
-    .links a {
-      display: flex;
-      align-items: center;
-      text-decoration: none;
-      background: #e0e0e0;
-      padding: 0.5em 1em;
-      border-radius: 6px;
-      color: #2c3e50;
-      transition: background 0.2s;
-    }
+        .back-button {
+            position: absolute;
+            top: 2em;
+            left: 2em;
+            display: inline-block;
+            padding: 0.75em 1.5em;
+            background: rgba(30, 144, 255, 0.2);
+            border: solid 1px #1e90ff;
+            border-radius: 0.35em;
+            color: #1e90ff;
+            text-decoration: none;
+            font-size: 0.9em;
+            font-weight: 300;
+            transition: all 0.2s ease-in-out;
+            backdrop-filter: blur(10px);
+        }
 
-    .links a:hover {
-      background: #d0d0d0;
-    }
+        .back-button:hover {
+            background: #1e90ff;
+            color: #fff;
+            text-decoration: none;
+        }
 
-    .links i {
-      margin-right: 0.5em;
-    }
-  </style>
+        /* Project Navigation */
+        .project-nav {
+            padding: 2em 0;
+            text-align: center;
+            border-bottom: solid 1px rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+        }
+
+        .project-tabs {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 1em;
+            margin-top: 1.5em;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 0.5em 0;
+        }
+
+        .project-tab {
+            display: inline-block;
+            padding: 0.75em 1.5em;
+            background: rgba(30, 144, 255, 0.2);
+            border: solid 1px #1e90ff;
+            border-radius: 0.35em;
+            color: #1e90ff;
+            text-decoration: none;
+            font-size: 0.9em;
+            font-weight: 300;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            backdrop-filter: blur(10px);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .project-tab:hover, .project-tab.active {
+            background: #1e90ff;
+            color: #fff;
+        }
+
+        /* Main Content */
+        .main {
+            padding: 4em 0;
+        }
+
+        .project-content {
+            display: none;
+        }
+
+        .project-content.active {
+            display: block;
+        }
+
+        /* Project Header */
+        .project-header {
+            text-align: center;
+            margin-bottom: 3em;
+            padding: 2em;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 0.35em;
+            border: solid 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .project-title {
+            margin-bottom: 1em;
+        }
+
+        .project-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5em;
+            margin: 2em 0;
+        }
+
+        .project-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 0.35em;
+            border: solid 1px rgba(255, 255, 255, 0.2);
+            transition: all 0.2s ease-in-out;
+        }
+
+        .project-image:hover {
+            border-color: #1e90ff;
+            box-shadow: 0 0 20px rgba(30, 144, 255, 0.3);
+        }
+
+        /* Project Links */
+        .project-links {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 2em;
+            margin: 2em 0;
+            flex-wrap: wrap;
+        }
+
+        .github-card {
+            background: rgba(13, 17, 23, 0.9);
+            border: solid 1px rgba(48, 54, 61, 0.8);
+            border-radius: 8px;
+            padding: 1.5em;
+            text-decoration: none;
+            color: #e6edf3;
+            transition: all 0.2s ease-in-out;
+            min-width: 320px;
+            max-width: 400px;
+            backdrop-filter: blur(10px);
+        }
+
+        .github-card:hover {
+            border-color: #1e90ff;
+            box-shadow: 0 0 20px rgba(30, 144, 255, 0.3);
+            text-decoration: none;
+            color: #e6edf3;
+        }
+
+        .github-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+            margin-bottom: 0.8em;
+        }
+
+        .github-icon {
+            width: 20px;
+            height: 20px;
+            fill: #7d8590;
+        }
+
+        .repo-name {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #1e90ff;
+        }
+
+        .template-badge {
+            background: rgba(48, 54, 61, 0.8);
+            color: #7d8590;
+            padding: 0.2em 0.5em;
+            border-radius: 12px;
+            font-size: 0.75em;
+            margin-left: auto;
+        }
+
+        .repo-description {
+            color: #7d8590;
+            font-size: 0.9em;
+            line-height: 1.4;
+            margin-bottom: 1em;
+        }
+
+        .repo-stats {
+            display: flex;
+            align-items: center;
+            gap: 1em;
+            font-size: 0.8em;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.3em;
+            color: #7d8590;
+        }
+
+        .language-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #e34c26;
+        }
+
+        .python-dot {
+            background: #3572A5;
+        }
+
+        .paper-card {
+            background: rgba(220, 53, 69, 0.1);
+            border: solid 1px rgba(220, 53, 69, 0.3);
+            border-radius: 8px;
+            padding: 1.5em;
+            text-decoration: none;
+            color: #fff;
+            transition: all 0.2s ease-in-out;
+            min-width: 280px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 1em;
+        }
+
+        .paper-card:hover {
+            background: rgba(220, 53, 69, 0.2);
+            border-color: #dc3545;
+            box-shadow: 0 0 20px rgba(220, 53, 69, 0.3);
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .paper-icon-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            border-radius: 12px;
+            flex-shrink: 0;
+        }
+
+        .paper-icon {
+            width: 32px;
+            height: 32px;
+            fill: white;
+        }
+
+        .paper-info {
+            flex: 1;
+        }
+
+        .paper-title {
+            font-size: 1em;
+            font-weight: 600;
+            margin-bottom: 0.3em;
+        }
+
+        .paper-subtitle {
+            font-size: 0.85em;
+            color: #ccc;
+        }
+
+        /* Project Sections */
+        .project-section {
+            margin-bottom: 3em;
+            padding: 2em;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 0.35em;
+            border: solid 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .section-title {
+            margin-bottom: 1em;
+            padding-bottom: 0.5em;
+            border-bottom: solid 1px #1e90ff;
+            color: #1e90ff;
+        }
+
+        .section-content {
+            font-size: 1em;
+            line-height: 1.75em;
+            color: #ddd;
+        }
+
+        /* Experience Highlights */
+        .experience-highlights {
+            margin-top: 2em;
+        }
+
+        .highlight-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: row;
+            gap: 1.5em;
+            flex-wrap: wrap;
+        }
+
+        .highlight-list li {
+            flex: 1;
+            min-width: 250px;
+            padding: 1.5em;
+            background: rgba(30, 144, 255, 0.1);
+            border: solid 1px rgba(30, 144, 255, 0.3);
+            border-radius: 0.35em;
+            backdrop-filter: blur(10px);
+        }
+
+        .highlight-list li strong {
+            color: #1e90ff;
+            display: block;
+            margin-bottom: 0.5em;
+            font-size: 1.1em;
+        }
+
+        /* Physics equations styling */
+        .equation {
+            font-family: 'Computer Modern', serif;
+            font-style: italic;
+            background: rgba(30, 144, 255, 0.1);
+            padding: 0.5em 1em;
+            border-radius: 0.35em;
+            border-left: solid 3px #1e90ff;
+            margin: 1em 0;
+            color: #fff;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 980px) {
+            .container {
+                padding: 0 1.5em;
+            }
+            
+            .back-button {
+                position: relative;
+                top: auto;
+                left: auto;
+                margin-bottom: 2em;
+            }
+            
+            .header {
+                padding: 2em 0;
+            }
+            
+            .project-tabs {
+                flex-direction: row;
+                justify-content: flex-start;
+                overflow-x: auto;
+                padding: 0 1em;
+            }
+            
+            .project-tab {
+                min-width: 150px;
+                flex-shrink: 0;
+            }
+            
+            .project-links {
+                flex-direction: row;
+                justify-content: center;
+                gap: 1.5em;
+            }
+            
+            .github-card, .paper-card {
+                width: 100%;
+                max-width: 300px;
+                min-width: 280px;
+            }
+
+            .highlight-list {
+                flex-direction: column;
+            }
+
+            .highlight-list li {
+                min-width: auto;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 0 1em;
+            }
+            
+            h1 { font-size: 2em; }
+            h2 { font-size: 1.5em; }
+            
+            .main {
+                padding: 2em 0;
+            }
+            
+            .project-images {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
-<body>
-
-  <header>
-    <a href="index.html" class="back-button">&larr; Back to Main</a>
-    <h1>My Projects</h1>
-  </header>
-
-  <nav>
-    <button onclick="showProject('proj1')" class="active">Project 1</button>
-    <button onclick="showProject('proj2')">Project 2</button>
-  </nav>
-
-  <section id="proj1" class="project active">
-    <div class="card">
-      <img src="images/project1.jpg" alt="Project 1 image" class="preview">
-      <div class="links">
-        <a href="https://github.com/yourusername/project1" target="_blank">
-          <i class="fab fa-github"></i> GitHub Repo
-        </a>
-        <a href="pdfs/project1-paper.pdf" target="_blank">
-          <i class="fas fa-file-pdf"></i> View Paper
-        </a>
-      </div>
-      <div class="card">
-        <h2>Plain Description</h2>
-        <p>This project investigates how...</p>
-      </div>
-      <div class="card">
-        <h2>Scientific Summary</h2>
-        <p>We develop a method for...</p>
-      </div>
-      <div class="card">
-        <h2>My Experience</h2>
-        <p>While working on this, I learned...</p>
-      </div>
+<body class="dark-matter">
+    <div class="header">
+        <div class="container">
+            <a href="#" class="back-button" onclick="goBack()">← Back to Home</a>
+            <h1>Physics Research</h1>
+            <p>Theoretical astroparticle physics and dark matter studies</p>
+        </div>
     </div>
-  </section>
 
-  <section id="proj2" class="project">
-    <div class="card">
-      <img src="images/project2.jpg" alt="Project 2 image" class="preview">
-      <div class="links">
-        <a href="https://github.com/yourusername/project2" target="_blank">
-          <i class="fab fa-github"></i> GitHub Repo
-        </a>
-        <a href="pdfs/project2-paper.pdf" target="_blank">
-          <i class="fas fa-file-pdf"></i> View Paper
-        </a>
-      </div>
-      <div class="card">
-        <h2>Plain Description</h2>
-        <p>This project explores...</p>
-      </div>
-      <div class="card">
-        <h2>Scientific Summary</h2>
-        <p>We simulate...</p>
-      </div>
-      <div class="card">
-        <h2>My Experience</h2>
-        <p>This helped me understand...</p>
-      </div>
+    <div class="project-nav">
+        <div class="container">
+            <div class="project-tabs">
+                <button class="project-tab active" onclick="showProject('dark-matter')">Dark Matter Distribution</button>
+                <button class="project-tab" onclick="showProject('stellar-physics')">Stellar Physics</button>
+                <button class="project-tab" onclick="showProject('galactic-dynamics')">Galactic Dynamics</button>
+                <button class="project-tab" onclick="showProject('cosmology')">Cosmological Simulations</button>
+            </div>
+        </div>
     </div>
-  </section>
 
-  <script>
-    function showProject(id) {
-      document.querySelectorAll('.project').forEach(p => p.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
-      const idx = id === 'proj1' ? 0 : 1;
-      document.querySelectorAll('nav button')[idx].classList.add('active');
-    }
-  </script>
-</body>
-</html>
+    <div class="main">
+        <div class="container">
+            <!-- Dark Matter Project -->
+            <div id="dark-matter" class="project-content active">
+                <div class="project-header">
+                    <h2 class="project-title">Theoretical Predictions for the Inner Dark Matter Distribution in the Milky Way</h2>
+                    
+                    <div class="project-images">
+                        <img src="https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Dark Matter Simulation" class="project-image">
+                        <img src="https://images.unsplash.com/photo-1583212292454-1fe6229603b7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Milky Way Structure" class="project-image">
+                    </div>
+
+                    <div class="project-links">
+                        <a href="https://github.com/abdelazizhussein" class="github-card">
+                            <div class="github-header">
+                                <svg class="github-icon" viewBox="0 0 16 16">
+                                    <path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8.5ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"/>
+                                </svg>
+                                <span class="repo-name">dm-distribution-analysis</span>
+                                <span class="template-badge">Public</span>
+                            </div>
+                            <div class="repo-description">
+                                Analysis code for theoretical predictions of inner dark matter distribution in Milky Way-like galaxies
+                            </div>
+                            <div class="repo-stats">
+                                <div class="stat-item">
+                                    <div class="language-dot python-dot"></div>
+                                    <span>Python</span>
+                                </div>
+                                <div class="stat-item">
+                                    <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+                                        <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/>
+                                    </svg>
+                                    <span>15</span>
+                                </div>
+                                <div class="stat-item">
+                                    <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+                                        <path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"/>
+                                    </svg>
+                                    <span>8</span>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="https://arxiv.org/abs/2501.14868" class="paper-card">
+                            <div class="paper-icon-container">
+                                <svg class="paper-icon" viewBox="0 0 24 24">
+                                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                                    <path d="M8,12H16V14H8V12M8,16H13V18H8V16Z" fill="rgba(255,255,255,0.7)"/>
+                                </svg>
+                            </div>
+                            <div class="paper-info">
+                                <div class="paper-title">arXiv Paper</div>
+                                <div class="paper-subtitle">2501.14868</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <h3 class="section-title">Abstract</h3>
+                    <div class="section-content">
+                        We build a theoretical range for the Milky Way's inner dark matter distribution informed by the FIRE-2, Auriga, VINTERGATAN-GM, and TNG50 simulation suites, assuming the canonical cold dark matter (CDM) model. This work provides crucial constraints for direct detection experiments and indirect dark matter searches by establishing robust predictions for the local dark matter density profile.
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <h3 class="section-title">Physics & Methodology</h3>
+                    <div class="section-content">
+                        The dark matter density profiles in Auriga, VINTERGATAN-GM, and TNG50 simulations can be approximately modeled using the adiabatic contraction prescription of Gnedin et al. (2004), while FIRE-2 exhibits stronger baryonic feedback, leading to departures from the adiabatic contraction model. The simulated halos that undergo adiabatic contraction are close to spherical with axis ratios q ∈ [0.75-0.9] at 5 kpc.
+                        
+                        <div class="equation">
+                            ρ(r) = ρ₀ / [(r/rₛ)(1 + r/rₛ)²]  &nbsp;&nbsp;&nbsp; (NFW Profile)
+                        </div>
+                        
+                        We analyze the impact of baryonic physics on the dark matter distribution, particularly examining how stellar feedback and gravitational interactions modify the expected density profiles from dark matter-only simulations.
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <h3 class="section-title">Research Experience & Impact</h3>
+                    <div class="section-content">
+                        This research combines theoretical modeling with cutting-edge cosmological simulations to understand how baryonic physics affects dark matter distributions in Milky Way-like galaxies. The work directly informs experimental searches for dark matter particles.
+                        
+                        <div class="experience-highlights">
+                            <ul class="highlight-list">
+                                <li>
+                                    <strong>Theoretical Challenge:</strong>
+                                    Reconciling different simulation predictions for inner galaxy dark matter profiles and understanding the role of baryonic feedback mechanisms.
+                                </li>
+                                <li>
+                                    <strong>Computational Methods:</strong>
+                                    Analysis of multiple state-of-the-art cosmological simulation suites (FIRE-2, Auriga, VINTERGATAN-GM, TNG50) to establish robust theoretical predictions.
+                                </li>
+                                <li>
+                                    <strong>Experimental Relevance:</strong>
+                                    Results provide critical input for direct detection experiments and constrain local dark matter density for particle physics searches.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stellar Physics Project -->
+            <div id="stellar-physics" class="project-content">
+                <div class="project-header">
+                    <h2 class="project-title">Stellar Feedback in Dark Matter Halos</h2>
+                    
+                    <div class="project-images">
+                        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Stellar Formation" class="project-image">
+                        <img src="https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Stellar Winds" class="project-image">
+                    </div>
+
+                    <div class="project-links">
+                        <a href="#" class="link-item">
+                            <div class="link-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.30 3.297-1.30.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                                </svg>
+                            </div>
+                            <div class="link-text">Simulation Code</div>
+                        </a>
+                        <a href="#" class="link-item">
+                            <div class="link-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                                </svg>
+                            </div>
+                            <div class="link-text">Draft Paper</div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <h3 class="section-title">Overview</h3>
+                    <div class="section-content">
+                        Investigation of how stellar feedback mechanisms - including supernovae, stellar winds, and radiation pressure - affect the distribution and dynamics of dark matter in galactic halos. This work explores the complex interplay between baryonic and dark matter components in galaxy formation.
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <h3 class="section-title">Physical Processes</h3>
+                    <div class="section-content">
+                        We study energy injection from stellar processes and its impact on dark matter halo structure. Key mechanisms include supernova explosions that can create cavities in the dark matter distribution, and stellar winds that provide continuous energy input affecting the gravitational potential.
+                        
+                        <div class="equation">
+                            E_SN ≈ 10⁵¹ erg  &nbsp;&nbsp;&nbsp; (Typical supernova energy)
+                        </div>
+                        
+                        The cumulative effect of stellar feedback can lead to significant modifications of the inner dark matter profile, particularly in lower-mass halos where the escape velocity is comparable to stellar wind velocities.
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <h3 class="section-title">Research Experience</h3>
+                    <div class="section-content">
+                        This project involves both analytical modeling of stellar feedback processes and numerical simulations to track their effects on dark matter distributions over cosmic time.
+                        
+                        <div class="experience-highlights">
+                            <ul class="highlight-list">
+                                <li>
+                                    <strong>Physics Modeling:</strong>
+                                    Developed semi-analytical models for stellar feedback efficiency as a function of halo mass and stellar population characteristics.
+                                </li>
+                                <li>
+                                    <strong>Computational Skills:</strong>
+                                    Implemented custom feedback prescriptions in hydrodynamical simulation codes and analyzed multi-scale physics interactions.
+                                </li>
+                                <li>
+                                    <strong>Astrophysical Insights:</strong>
+                                    Quantified how stellar feedback creates diversity in dark matter halo profiles, explaining observed galaxy-to-galaxy variations.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Galactic Dynamics Project -->
+            <div id="galactic-dynamics" class="project-content">
+                <div class="project-header">
+                    <h2 class="project-title">Orbital Dynamics in Modified Gravity</h2>
+                    
+                    <div class="project-images">
+                        <img src="https://images.unsplash.com/photo-1502134249126-9f3755a50d78?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Galaxy Rotation" class="project-image">
+                        <img src="https://images.unsplash.com/photo-1616161560417-66d4db5892ec?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Orbital Mechanics" class="project-image">
+                    </div>
+
+                    <div class="project-links">
+                        <a href="#" class="link-item">
+                            <div class="link-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.30 3.297-1.30.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                                </svg>
+                            </div>
+                            <div class="link-text">Analysis Tools</div>
+                        </a>
+                        <a href="#" class="link-item">
+                            <div class="link-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                                </svg>
+                            </div>
+                            <div class="link-text">In Preparation</div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <h3 class="section-title">Research Motivation</h3>
+                    <div class="section-content">
+                        Exploring alternatives to dark matter by investigating modified gravity theories and their predictions for galactic rotation curves. This work examines whether modifications to Einstein's general relativity can explain observed galactic dynamics without invoking dark matter.
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <h3 class="section-title">Theoretical Framework</h3>
+                    <div class="section-content">
+                        We analyze orbital dynamics in modified gravity theories such as MOND (Modified Newtonian Dynamics) and f(R) gravity. The key insight is that at low accelerations (a < a₀ ≈ 10⁻¹⁰ m/s²), the gravitational force law may deviate from Newton's inverse square law.
+                        
+                        <div class="
