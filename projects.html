@@ -41,12 +41,12 @@
         }
 
         strong, b {
-            color: #ddd;
+            color: #787878;
             font-weight: 400;
         }
 
         h1, h2, h3 {
-            color: #fff;
+            color: #787878;
             font-weight: 300;
             line-height: 1.3em;
             margin: 0 0 1em 0;
@@ -76,21 +76,29 @@
             top: 2em;
             left: 2em;
             display: inline-block;
-            padding: 0.75em 1.5em;
-            background: rgba(30, 144, 255, 0.2);
-            border: solid 1px #1e90ff;
+            background: transparent;
+            border: solid 1px #c9c9c9;
             border-radius: 0.35em;
-            color: #1e90ff;
-            text-decoration: none;
-            font-size: 0.9em;
+            color: inherit;
+            cursor: pointer;
+            display: inline-block;
+            font-size: 0.8em;
             font-weight: 300;
+            height: 3.5em;
+            letter-spacing: 0.125em;
+            line-height: 3.5em;
+            padding: 0 1.75em;
+            text-align: center;
+            text-decoration: none;
+            text-transform: uppercase;
+            white-space: nowrap;
             transition: all 0.2s ease-in-out;
-            backdrop-filter: blur(10px);
         }
 
         .back-button:hover {
-            background: #1e90ff;
-            color: #fff;
+            background: #49bf9d;
+            border-color: #49bf9d;
+            color: #fff !important;
             text-decoration: none;
         }
 
@@ -116,25 +124,30 @@
         }
 
         .project-tab {
-            display: inline-block;
-            padding: 0.75em 1.5em;
-            background: rgba(30, 144, 255, 0.2);
-            border: solid 1px #1e90ff;
+            background: transparent;
+            border: solid 1px #c9c9c9;
             border-radius: 0.35em;
-            color: #1e90ff;
-            text-decoration: none;
-            font-size: 0.9em;
-            font-weight: 300;
+            color: inherit;
             cursor: pointer;
-            transition: all 0.2s ease-in-out;
-            backdrop-filter: blur(10px);
+            display: inline-block;
+            font-size: 0.8em;
+            font-weight: 300;
+            height: 3.5em;
+            letter-spacing: 0.125em;
+            line-height: 3.5em;
+            padding: 0 1.75em;
+            text-align: center;
+            text-decoration: none;
+            text-transform: uppercase;
             white-space: nowrap;
+            transition: all 0.2s ease-in-out;
             flex-shrink: 0;
         }
 
         .project-tab:hover, .project-tab.active {
-            background: #1e90ff;
-            color: #fff;
+            background: #49bf9d;
+            border-color: #49bf9d;
+            color: #fff !important;
         }
 
         /* Main Content */
@@ -163,6 +176,7 @@
 
         .project-title {
             margin-bottom: 1em;
+            color: #787878;
         }
 
         .project-images {
@@ -182,8 +196,8 @@
         }
 
         .project-image:hover {
-            border-color: #1e90ff;
-            box-shadow: 0 0 20px rgba(30, 144, 255, 0.3);
+            border-color: #49bf9d;
+            box-shadow: 0 0 20px rgba(73, 191, 157, 0.3);
         }
 
         /* Project Links */
@@ -199,7 +213,7 @@
         .github-card {
             background: rgba(13, 17, 23, 0.9);
             border: solid 1px rgba(48, 54, 61, 0.8);
-            border-radius: 8px;
+            border-radius: 0.35em;
             padding: 1.5em;
             text-decoration: none;
             color: #e6edf3;
@@ -210,8 +224,8 @@
         }
 
         .github-card:hover {
-            border-color: #1e90ff;
-            box-shadow: 0 0 20px rgba(30, 144, 255, 0.3);
+            border-color: #49bf9d;
+            box-shadow: 0 0 20px rgba(73, 191, 157, 0.3);
             text-decoration: none;
             color: #e6edf3;
         }
@@ -232,7 +246,7 @@
         .repo-name {
             font-size: 1.1em;
             font-weight: 600;
-            color: #1e90ff;
+            color: #49bf9d;
         }
 
         .template-badge {
@@ -276,10 +290,14 @@
             background: #3572A5;
         }
 
+        .jupyter-dot {
+            background: #DA5B0B;
+        }
+
         .paper-card {
             background: rgba(220, 53, 69, 0.1);
             border: solid 1px rgba(220, 53, 69, 0.3);
-            border-radius: 8px;
+            border-radius: 0.35em;
             padding: 1.5em;
             text-decoration: none;
             color: #fff;
@@ -306,7 +324,7 @@
             width: 60px;
             height: 60px;
             background: linear-gradient(135deg, #dc3545, #c82333);
-            border-radius: 12px;
+            border-radius: 0.35em;
             flex-shrink: 0;
         }
 
@@ -344,14 +362,14 @@
         .section-title {
             margin-bottom: 1em;
             padding-bottom: 0.5em;
-            border-bottom: solid 1px #1e90ff;
-            color: #1e90ff;
+            border-bottom: solid 1px #49bf9d;
+            color: #787878;
         }
 
         .section-content {
             font-size: 1em;
             line-height: 1.75em;
-            color: #ddd;
+            color: #888;
         }
 
         /* Experience Highlights */
@@ -372,27 +390,28 @@
             flex: 1;
             min-width: 250px;
             padding: 1.5em;
-            background: rgba(30, 144, 255, 0.1);
-            border: solid 1px rgba(30, 144, 255, 0.3);
+            background: rgba(73, 191, 157, 0.1);
+            border: solid 1px rgba(73, 191, 157, 0.3);
             border-radius: 0.35em;
             backdrop-filter: blur(10px);
         }
 
         .highlight-list li strong {
-            color: #1e90ff;
+            color: #49bf9d;
             display: block;
             margin-bottom: 0.5em;
             font-size: 1.1em;
+            font-weight: 400;
         }
 
         /* Physics equations styling */
         .equation {
             font-family: 'Computer Modern', serif;
             font-style: italic;
-            background: rgba(30, 144, 255, 0.1);
+            background: rgba(73, 191, 157, 0.1);
             padding: 0.5em 1em;
             border-radius: 0.35em;
-            border-left: solid 3px #1e90ff;
+            border-left: solid 3px #49bf9d;
             margin: 1em 0;
             color: #fff;
         }
@@ -591,21 +610,47 @@
                     </div>
 
                     <div class="project-links">
-                        <a href="#" class="link-item">
-                            <div class="link-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.30 3.297-1.30.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        <a href="#" class="github-card">
+                            <div class="github-header">
+                                <svg class="github-icon" viewBox="0 0 16 16">
+                                    <path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8.5ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"/>
                                 </svg>
+                                <span class="repo-name">stellar-feedback-sims</span>
+                                <span class="template-badge">Public</span>
                             </div>
-                            <div class="link-text">Simulation Code</div>
+                            <div class="repo-description">
+                                Hydrodynamical simulations studying stellar feedback effects on dark matter halo structure
+                            </div>
+                            <div class="repo-stats">
+                                <div class="stat-item">
+                                    <div class="language-dot python-dot"></div>
+                                    <span>Python</span>
+                                </div>
+                                <div class="stat-item">
+                                    <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+                                        <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/>
+                                    </svg>
+                                    <span>12</span>
+                                </div>
+                                <div class="stat-item">
+                                    <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+                                        <path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"/>
+                                    </svg>
+                                    <span>6</span>
+                                </div>
+                            </div>
                         </a>
-                        <a href="#" class="link-item">
-                            <div class="link-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <a href="#" class="paper-card">
+                            <div class="paper-icon-container">
+                                <svg class="paper-icon" viewBox="0 0 24 24">
                                     <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                                    <path d="M8,12H16V14H8V12M8,16H13V18H8V16Z" fill="rgba(255,255,255,0.7)"/>
                                 </svg>
                             </div>
-                            <div class="link-text">Draft Paper</div>
+                            <div class="paper-info">
+                                <div class="paper-title">Draft Paper</div>
+                                <div class="paper-subtitle">In Preparation</div>
+                            </div>
                         </a>
                     </div>
                 </div>
@@ -621,80 +666,3 @@
                     <h3 class="section-title">Physical Processes</h3>
                     <div class="section-content">
                         We study energy injection from stellar processes and its impact on dark matter halo structure. Key mechanisms include supernova explosions that can create cavities in the dark matter distribution, and stellar winds that provide continuous energy input affecting the gravitational potential.
-                        
-                        <div class="equation">
-                            E_SN ≈ 10⁵¹ erg  &nbsp;&nbsp;&nbsp; (Typical supernova energy)
-                        </div>
-                        
-                        The cumulative effect of stellar feedback can lead to significant modifications of the inner dark matter profile, particularly in lower-mass halos where the escape velocity is comparable to stellar wind velocities.
-                    </div>
-                </div>
-
-                <div class="project-section">
-                    <h3 class="section-title">Research Experience</h3>
-                    <div class="section-content">
-                        This project involves both analytical modeling of stellar feedback processes and numerical simulations to track their effects on dark matter distributions over cosmic time.
-                        
-                        <div class="experience-highlights">
-                            <ul class="highlight-list">
-                                <li>
-                                    <strong>Physics Modeling:</strong>
-                                    Developed semi-analytical models for stellar feedback efficiency as a function of halo mass and stellar population characteristics.
-                                </li>
-                                <li>
-                                    <strong>Computational Skills:</strong>
-                                    Implemented custom feedback prescriptions in hydrodynamical simulation codes and analyzed multi-scale physics interactions.
-                                </li>
-                                <li>
-                                    <strong>Astrophysical Insights:</strong>
-                                    Quantified how stellar feedback creates diversity in dark matter halo profiles, explaining observed galaxy-to-galaxy variations.
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Galactic Dynamics Project -->
-            <div id="galactic-dynamics" class="project-content">
-                <div class="project-header">
-                    <h2 class="project-title">Orbital Dynamics in Modified Gravity</h2>
-                    
-                    <div class="project-images">
-                        <img src="https://images.unsplash.com/photo-1502134249126-9f3755a50d78?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Galaxy Rotation" class="project-image">
-                        <img src="https://images.unsplash.com/photo-1616161560417-66d4db5892ec?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Orbital Mechanics" class="project-image">
-                    </div>
-
-                    <div class="project-links">
-                        <a href="#" class="link-item">
-                            <div class="link-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.30 3.297-1.30.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                                </svg>
-                            </div>
-                            <div class="link-text">Analysis Tools</div>
-                        </a>
-                        <a href="#" class="link-item">
-                            <div class="link-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
-                                </svg>
-                            </div>
-                            <div class="link-text">In Preparation</div>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="project-section">
-                    <h3 class="section-title">Research Motivation</h3>
-                    <div class="section-content">
-                        Exploring alternatives to dark matter by investigating modified gravity theories and their predictions for galactic rotation curves. This work examines whether modifications to Einstein's general relativity can explain observed galactic dynamics without invoking dark matter.
-                    </div>
-                </div>
-
-                <div class="project-section">
-                    <h3 class="section-title">Theoretical Framework</h3>
-                    <div class="section-content">
-                        We analyze orbital dynamics in modified gravity theories such as MOND (Modified Newtonian Dynamics) and f(R) gravity. The key insight is that at low accelerations (a < a₀ ≈ 10⁻¹⁰ m/s²), the gravitational force law may deviate from Newton's inverse square law.
-                        
-                        <div class="
