@@ -1,25 +1,94 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-	<title>Projects - Your Name</title>
-	<meta charset="utf-8" />
-	<link rel="stylesheet" href="assets/css/main.css" />
+  <title>Projects | Your Name</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <style>
+    body {
+      padding: 2em;
+      font-family: sans-serif;
+    }
+    nav#project-nav {
+      text-align: center;
+      margin-bottom: 2em;
+    }
+    nav#project-nav ul {
+      list-style: none;
+      padding: 0;
+      display: inline-flex;
+      gap: 1em;
+    }
+    nav#project-nav ul li a {
+      padding: 0.5em 1em;
+      background: #1f1815;
+      color: white;
+      text-decoration: none;
+      border-radius: 0.25em;
+    }
+    nav#project-nav ul li a:hover {
+      background: #c9a36c;
+    }
+    section.project {
+      display: none;
+    }
+    section.project.active {
+      display: block;
+    }
+    .project-images img {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 1em;
+    }
+  </style>
 </head>
 <body>
-	<header id="header">
-		<div class="inner">
-			<a href="index.html" class="image avatar"><img src="images/avatar.jpg" alt="" /></a>
-			<h1><strong>Projects</strong> page</h1>
-		</div>
-	</header>
 
-	<div id="main">
-		<section>
-			<header class="major">
-				<h2>My Projects</h2>
-			</header>
-			<p>This is where you describe your projects.</p>
-		</section>
-	</div>
+  <!-- Top Nav -->
+  <nav id="project-nav">
+    <ul>
+      <li><a href="#" onclick="showProject('proj1')">Project 1</a></li>
+      <li><a href="#" onclick="showProject('proj2')">Project 2</a></li>
+      <!-- Add more projects as needed -->
+    </ul>
+  </nav>
+
+  <!-- Project Sections -->
+  <section id="proj1" class="project active">
+    <div class="project-images">
+      <img src="images/proj1-figure.jpg" alt="Project 1 screenshot">
+    </div>
+    <p><strong>GitHub:</strong> <a href="https://github.com/user/project1">View Repository</a></p>
+    <p><strong>Paper:</strong> <a href="https://arxiv.org/abs/1234.56789">Read on arXiv</a></p>
+    <h3>Plain Words Description</h3>
+    <p>This project analyzes dark matter distribution near supermassive black holes using simulations.</p>
+    <h3>Scientific Description</h3>
+    <p>We solve the coupled system of electron cooling and advection in relativistic AGN jets, constrained by synchrotron observables...</p>
+    <h3>Reflection</h3>
+    <p>This was my first large-scale numerical project. I learned a lot about memory optimization and reproducibility during this work.</p>
+  </section>
+
+  <section id="proj2" class="project">
+    <div class="project-images">
+      <img src="images/proj2-figure.jpg" alt="Project 2 screenshot">
+    </div>
+    <p><strong>GitHub:</strong> <a href="https://github.com/user/project2">View Repository</a></p>
+    <p><strong>Paper:</strong> <a href="#">Coming Soon</a></p>
+    <h3>Plain Words Description</h3>
+    <p>This project models the gamma-ray emission from dark matter in the Milky Way’s center using FIRE-2 simulations.</p>
+    <h3>Scientific Description</h3>
+    <p>We construct an adiabatically contracted profile from FIRE-2 baryon distributions and integrate the J-factor across angular windows...</p>
+    <h3>Reflection</h3>
+    <p>This project taught me how to combine simulation and theory in a practical framework for observational prediction.</p>
+  </section>
+
+  <script>
+    function showProject(id) {
+      document.querySelectorAll("section.project").forEach(s => s.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+    }
+  </script>
+
 </body>
 </html>
