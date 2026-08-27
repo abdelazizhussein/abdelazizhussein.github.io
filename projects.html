@@ -1,668 +1,232 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Research Projects - Abdelaziz Hussein</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Source Sans Pro', Helvetica, sans-serif;
-            font-weight: 300;
-            line-height: 1.75em;
-            color: #fff;
-            background: #000;
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            transition: background-image 1s ease-in-out;
-        }
-
-        /* Background images for different projects */
-        body.dark-matter {
-            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
-        }
-
-        body.stellar-physics {
-            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1502134249126-9f3755a50d78?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
-        }
-
-        body.galactic-dynamics {
-            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
-        }
-
-        body.cosmology {
-            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
-        }
-
-        strong, b {
-            color: #787878;
-            font-weight: 400;
-        }
-
-        h1, h2, h3 {
-            color: #787878;
-            font-weight: 300;
-            line-height: 1.3em;
-            margin: 0 0 1em 0;
-        }
-
-        h1 { font-size: 2.5em; }
-        h2 { font-size: 2em; }
-        h3 { font-size: 1.35em; }
-
-        .container {
-            max-width: 68em;
-            margin: 0 auto;
-            padding: 0 2em;
-        }
-
-        /* Header */
-        .header {
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: solid 1px rgba(255, 255, 255, 0.2);
-            padding: 3em 0;
-            text-align: center;
-        }
-
-        .back-button {
-            position: absolute;
-            top: 2em;
-            left: 2em;
-            display: inline-block;
-            background: transparent;
-            border: solid 1px #c9c9c9;
-            border-radius: 0.35em;
-            color: inherit;
-            cursor: pointer;
-            display: inline-block;
-            font-size: 0.8em;
-            font-weight: 300;
-            height: 3.5em;
-            letter-spacing: 0.125em;
-            line-height: 3.5em;
-            padding: 0 1.75em;
-            text-align: center;
-            text-decoration: none;
-            text-transform: uppercase;
-            white-space: nowrap;
-            transition: all 0.2s ease-in-out;
-        }
-
-        .back-button:hover {
-            background: #49bf9d;
-            border-color: #49bf9d;
-            color: #fff !important;
-            text-decoration: none;
-        }
-
-        /* Project Navigation */
-        .project-nav {
-            padding: 2em 0;
-            text-align: center;
-            border-bottom: solid 1px rgba(255, 255, 255, 0.1);
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-        }
-
-        .project-tabs {
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-            gap: 1em;
-            margin-top: 1.5em;
-            overflow-x: auto;
-            white-space: nowrap;
-            padding: 0.5em 0;
-        }
-
-        .project-tab {
-            background: transparent;
-            border: solid 1px #c9c9c9;
-            border-radius: 0.35em;
-            color: inherit;
-            cursor: pointer;
-            display: inline-block;
-            font-size: 0.8em;
-            font-weight: 300;
-            height: 3.5em;
-            letter-spacing: 0.125em;
-            line-height: 3.5em;
-            padding: 0 1.75em;
-            text-align: center;
-            text-decoration: none;
-            text-transform: uppercase;
-            white-space: nowrap;
-            transition: all 0.2s ease-in-out;
-            flex-shrink: 0;
-        }
-
-        .project-tab:hover, .project-tab.active {
-            background: #49bf9d;
-            border-color: #49bf9d;
-            color: #fff !important;
-        }
-
-        /* Main Content */
-        .main {
-            padding: 4em 0;
-        }
-
-        .project-content {
-            display: none;
-        }
-
-        .project-content.active {
-            display: block;
-        }
-
-        /* Project Header */
-        .project-header {
-            text-align: center;
-            margin-bottom: 3em;
-            padding: 2em;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            border-radius: 0.35em;
-            border: solid 1px rgba(255, 255, 255, 0.1);
-        }
-
-        .project-title {
-            margin-bottom: 1em;
-            color: #787878;
-        }
-
-        .project-images {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5em;
-            margin: 2em 0;
-        }
-
-        .project-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 0.35em;
-            border: solid 1px rgba(255, 255, 255, 0.2);
-            transition: all 0.2s ease-in-out;
-        }
-
-        .project-image:hover {
-            border-color: #49bf9d;
-            box-shadow: 0 0 20px rgba(73, 191, 157, 0.3);
-        }
-
-        /* Project Links */
-        .project-links {
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            gap: 2em;
-            margin: 2em 0;
-            flex-wrap: wrap;
-        }
-
-        .github-card {
-            background: rgba(13, 17, 23, 0.9);
-            border: solid 1px rgba(48, 54, 61, 0.8);
-            border-radius: 0.35em;
-            padding: 1.5em;
-            text-decoration: none;
-            color: #e6edf3;
-            transition: all 0.2s ease-in-out;
-            min-width: 320px;
-            max-width: 400px;
-            backdrop-filter: blur(10px);
-        }
-
-        .github-card:hover {
-            border-color: #49bf9d;
-            box-shadow: 0 0 20px rgba(73, 191, 157, 0.3);
-            text-decoration: none;
-            color: #e6edf3;
-        }
-
-        .github-header {
-            display: flex;
-            align-items: center;
-            gap: 0.5em;
-            margin-bottom: 0.8em;
-        }
-
-        .github-icon {
-            width: 20px;
-            height: 20px;
-            fill: #7d8590;
-        }
-
-        .repo-name {
-            font-size: 1.1em;
-            font-weight: 600;
-            color: #49bf9d;
-        }
-
-        .template-badge {
-            background: rgba(48, 54, 61, 0.8);
-            color: #7d8590;
-            padding: 0.2em 0.5em;
-            border-radius: 12px;
-            font-size: 0.75em;
-            margin-left: auto;
-        }
-
-        .repo-description {
-            color: #7d8590;
-            font-size: 0.9em;
-            line-height: 1.4;
-            margin-bottom: 1em;
-        }
-
-        .repo-stats {
-            display: flex;
-            align-items: center;
-            gap: 1em;
-            font-size: 0.8em;
-        }
-
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 0.3em;
-            color: #7d8590;
-        }
-
-        .language-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #e34c26;
-        }
-
-        .python-dot {
-            background: #3572A5;
-        }
-
-        .jupyter-dot {
-            background: #DA5B0B;
-        }
-
-        .paper-card {
-            background: rgba(220, 53, 69, 0.1);
-            border: solid 1px rgba(220, 53, 69, 0.3);
-            border-radius: 0.35em;
-            padding: 1.5em;
-            text-decoration: none;
-            color: #fff;
-            transition: all 0.2s ease-in-out;
-            min-width: 280px;
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            gap: 1em;
-        }
-
-        .paper-card:hover {
-            background: rgba(220, 53, 69, 0.2);
-            border-color: #dc3545;
-            box-shadow: 0 0 20px rgba(220, 53, 69, 0.3);
-            text-decoration: none;
-            color: #fff;
-        }
-
-        .paper-icon-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #dc3545, #c82333);
-            border-radius: 0.35em;
-            flex-shrink: 0;
-        }
-
-        .paper-icon {
-            width: 32px;
-            height: 32px;
-            fill: white;
-        }
-
-        .paper-info {
-            flex: 1;
-        }
-
-        .paper-title {
-            font-size: 1em;
-            font-weight: 600;
-            margin-bottom: 0.3em;
-        }
-
-        .paper-subtitle {
-            font-size: 0.85em;
-            color: #ccc;
-        }
-
-        /* Project Sections */
-        .project-section {
-            margin-bottom: 3em;
-            padding: 2em;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            border-radius: 0.35em;
-            border: solid 1px rgba(255, 255, 255, 0.1);
-        }
-
-        .section-title {
-            margin-bottom: 1em;
-            padding-bottom: 0.5em;
-            border-bottom: solid 1px #49bf9d;
-            color: #787878;
-        }
-
-        .section-content {
-            font-size: 1em;
-            line-height: 1.75em;
-            color: #888;
-        }
-
-        /* Experience Highlights */
-        .experience-highlights {
-            margin-top: 2em;
-        }
-
-        .highlight-list {
-            list-style: none;
-            padding: 0;
-            display: flex;
-            flex-direction: row;
-            gap: 1.5em;
-            flex-wrap: wrap;
-        }
-
-        .highlight-list li {
-            flex: 1;
-            min-width: 250px;
-            padding: 1.5em;
-            background: rgba(73, 191, 157, 0.1);
-            border: solid 1px rgba(73, 191, 157, 0.3);
-            border-radius: 0.35em;
-            backdrop-filter: blur(10px);
-        }
-
-        .highlight-list li strong {
-            color: #49bf9d;
-            display: block;
-            margin-bottom: 0.5em;
-            font-size: 1.1em;
-            font-weight: 400;
-        }
-
-        /* Physics equations styling */
-        .equation {
-            font-family: 'Computer Modern', serif;
-            font-style: italic;
-            background: rgba(73, 191, 157, 0.1);
-            padding: 0.5em 1em;
-            border-radius: 0.35em;
-            border-left: solid 3px #49bf9d;
-            margin: 1em 0;
-            color: #fff;
-        }
-
-        /* Responsive Design */
-        @media screen and (max-width: 980px) {
-            .container {
-                padding: 0 1.5em;
-            }
-            
-            .back-button {
-                position: relative;
-                top: auto;
-                left: auto;
-                margin-bottom: 2em;
-            }
-            
-            .header {
-                padding: 2em 0;
-            }
-            
-            .project-tabs {
-                flex-direction: row;
-                justify-content: flex-start;
-                overflow-x: auto;
-                padding: 0 1em;
-            }
-            
-            .project-tab {
-                min-width: 150px;
-                flex-shrink: 0;
-            }
-            
-            .project-links {
-                flex-direction: row;
-                justify-content: center;
-                gap: 1.5em;
-            }
-            
-            .github-card, .paper-card {
-                width: 100%;
-                max-width: 300px;
-                min-width: 280px;
-            }
-
-            .highlight-list {
-                flex-direction: column;
-            }
-
-            .highlight-list li {
-                min-width: auto;
-            }
-        }
-
-        @media screen and (max-width: 480px) {
-            .container {
-                padding: 0 1em;
-            }
-            
-            h1 { font-size: 2em; }
-            h2 { font-size: 1.5em; }
-            
-            .main {
-                padding: 2em 0;
-            }
-            
-            .project-images {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-</head>
-<body class="dark-matter">
-    <div class="header">
-        <div class="container">
-            <a href="index.html" class="back-button">← Home</a>
-            <h1>Physics Research</h1>
-            <p>Theoretical astroparticle physics and dark matter studies</p>
-        </div>
-    </div>
-
-    <div class="project-nav">
-        <div class="container">
-            <div class="project-tabs">
-                <button class="project-tab active" onclick="showProject('dark-matter')">Dark Matter Distribution</button>
-                <button class="project-tab" onclick="showProject('stellar-physics')">Stellar Physics</button>
-                <button class="project-tab" onclick="showProject('galactic-dynamics')">Galactic Dynamics</button>
-                <button class="project-tab" onclick="showProject('cosmology')">Cosmological Simulations</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="main">
-        <div class="container">
-            <!-- Dark Matter Project -->
-            <div id="dark-matter" class="project-content active">
-                <div class="project-header">
-                    <h2 class="project-title">Theoretical Predictions for the Inner Dark Matter Distribution in the Milky Way</h2>
-                    
-                    <div class="project-images">
-                        <img src="https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Dark Matter Simulation" class="project-image">
-                        <img src="https://images.unsplash.com/photo-1583212292454-1fe6229603b7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Milky Way Structure" class="project-image">
-                    </div>
-
-                    <div class="project-links">
-                        <a href="https://github.com/abdelazizhussein/MW-Inner-DM-Profile" class="github-card">
-                            <div class="github-header">
-                                <svg class="github-icon" viewBox="0 0 16 16">
-                                    <path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8.5ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"/>
-                                </svg>
-                                <span class="repo-name">MW-Inner-DM-Profile</span>
-                                <span class="template-badge">Public</span>
-                            </div>
-                            <div class="repo-description">
-                                Analysis code for theoretical predictions of inner dark matter distribution in Milky Way-like galaxies
-                            </div>
-                            <div class="repo-stats">
-                                <div class="stat-item">
-                                    <div class="language-dot python-dot"></div>
-                                    <span>Python</span>
-                                </div>
-                                <div class="stat-item">
-                                    <div class="language-dot jupyter-dot"></div>
-                                    <span>Jupyter Notebook</span>
-                                </div>
-                            </div>
-                        </a>
-                        <a href="https://arxiv.org/abs/2501.14868" class="paper-card">
-                            <div class="paper-icon-container">
-                                <svg class="paper-icon" viewBox="0 0 24 24">
-                                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
-                                    <path d="M8,12H16V14H8V12M8,16H13V18H8V16Z" fill="rgba(255,255,255,0.7)"/>
-                                </svg>
-                            </div>
-                            <div class="paper-info">
-                                <div class="paper-title">arXiv Paper</div>
-                                <div class="paper-subtitle">2501.14868</div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="project-section">
-                    <h3 class="section-title">Abstract</h3>
-                    <div class="section-content">
-                        We build a theoretical range for the Milky Way's inner dark matter distribution informed by the FIRE-2, Auriga, VINTERGATAN-GM, and TNG50 simulation suites, assuming the canonical cold dark matter (CDM) model. This work provides crucial constraints for direct detection experiments and indirect dark matter searches by establishing robust predictions for the local dark matter density profile.
-                    </div>
-                </div>
-
-                <div class="project-section">
-                    <h3 class="section-title">Physics & Methodology</h3>
-                    <div class="section-content">
-                        The dark matter density profiles in Auriga, VINTERGATAN-GM, and TNG50 simulations can be approximately modeled using the adiabatic contraction prescription of Gnedin et al. (2004), while FIRE-2 exhibits stronger baryonic feedback, leading to departures from the adiabatic contraction model. The simulated halos that undergo adiabatic contraction are close to spherical with axis ratios q ∈ [0.75-0.9] at 5 kpc.
-                        
-                        <div class="equation">
-                            ρ(r) = ρ₀ / [(r/rₛ)(1 + r/rₛ)²]  &nbsp;&nbsp;&nbsp; (NFW Profile)
-                        </div>
-                        
-                        We analyze the impact of baryonic physics on the dark matter distribution, particularly examining how stellar feedback and gravitational interactions modify the expected density profiles from dark matter-only simulations.
-                    </div>
-                </div>
-
-                <div class="project-section">
-                    <h3 class="section-title">Research Experience & Impact</h3>
-                    <div class="section-content">
-                        This research combines theoretical modeling with cutting-edge cosmological simulations to understand how baryonic physics affects dark matter distributions in Milky Way-like galaxies. The work directly informs experimental searches for dark matter particles.
-                        
-                        <div class="experience-highlights">
-                            <ul class="highlight-list">
-                                <li>
-                                    <strong>Theoretical Challenge:</strong>
-                                    Reconciling different simulation predictions for inner galaxy dark matter profiles and understanding the role of baryonic feedback mechanisms.
-                                </li>
-                                <li>
-                                    <strong>Computational Methods:</strong>
-                                    Analysis of multiple state-of-the-art cosmological simulation suites (FIRE-2, Auriga, VINTERGATAN-GM, TNG50) to establish robust theoretical predictions.
-                                </li>
-                                <li>
-                                    <strong>Experimental Relevance:</strong>
-                                    Results provide critical input for direct detection experiments and constrain local dark matter density for particle physics searches.
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Stellar Physics Project -->
-            <div id="stellar-physics" class="project-content">
-                <div class="project-header">
-                    <h2 class="project-title">Stellar Feedback in Dark Matter Halos</h2>
-                    
-                    <div class="project-images">
-                        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Stellar Formation" class="project-image">
-                        <img src="https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Stellar Winds" class="project-image">
-                    </div>
-
-                    <div class="project-links">
-                        <a href="#" class="github-card">
-                            <div class="github-header">
-                                <svg class="github-icon" viewBox="0 0 16 16">
-                                    <path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8.5ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"/>
-                                </svg>
-                                <span class="repo-name">stellar-feedback-sims</span>
-                                <span class="template-badge">Public</span>
-                            </div>
-                            <div class="repo-description">
-                                Hydrodynamical simulations studying stellar feedback effects on dark matter halo structure
-                            </div>
-                            <div class="repo-stats">
-                                <div class="stat-item">
-                                    <div class="language-dot python-dot"></div>
-                                    <span>Python</span>
-                                </div>
-                                <div class="stat-item">
-                                    <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
-                                        <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/>
-                                    </svg>
-                                    <span>12</span>
-                                </div>
-                                <div class="stat-item">
-                                    <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
-                                        <path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"/>
-                                    </svg>
-                                    <span>6</span>
-                                </div>
-                            </div>
-                        </a>
-                        <a href="#" class="paper-card">
-                            <div class="paper-icon-container">
-                                <svg class="paper-icon" viewBox="0 0 24 24">
-                                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
-                                    <path d="M8,12H16V14H8V12M8,16H13V18H8V16Z" fill="rgba(255,255,255,0.7)"/>
-                                </svg>
-                            </div>
-                            <div class="paper-info">
-                                <div class="paper-title">Draft Paper</div>
-                                <div class="paper-subtitle">In Preparation</div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="project-section">
-                    <h3 class="section-title">Overview</h3>
-                    <div class="section-content">
-                        Investigation of how stellar feedback mechanisms - including supernovae, stellar winds, and radiation pressure - affect the distribution and dynamics of dark matter in galactic halos. This work explores the complex interplay between baryonic and dark matter components in galaxy formation.
-                    </div>
-                </div>
-
-                <div class="project-section">
-                    <h3 class="section-title">Physical Processes</h3>
-                    <div class="section-content">
-                        We study energy injection from stellar processes and its impact on dark matter halo structure. Key mechanisms include supernova explosions that can create cavities in the dark matter distribution, and stellar winds that provide continuous energy input affecting the gravitational potential.
+<!DOCTYPE HTML>
+<!--
+	Strata by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Research - Abdelaziz Hussein</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<style>
+			/* Research project collapsible tweaks (same pattern as the blogs page) */
+			details.research-post {
+				margin: 1.25rem 0;
+				border: 2px solid #222;
+				padding: 1rem;
+				border-radius: 4px;
+				background: rgba(255,255,255,0.01);
+				transition: border-color 0.2s;
+			}
+			details.research-post[open] {
+				border-color: #888;
+			}
+			details.research-post summary {
+				cursor: pointer;
+				list-style: none;
+				display: flex;
+				align-items: center;
+				font-size: 1.1em;
+				user-select: none;
+			}
+			details.research-post summary h3 {
+				display: inline-block;
+				margin: 0;
+				flex: 1;
+			}
+			.research-meta {
+				color: rgba(60,60,60,0.7);
+				font-size: 0.9rem;
+				margin-left: 0.5rem;
+			}
+			.research-content { margin-top: 0.75rem; }
+			.research-content img { max-width: 100%; height: auto; display:block; margin-bottom: 0.75rem; border-radius:4px }
+			.research-content h4 {
+				margin: 1.25rem 0 0.5rem 0;
+			}
+
+			/* Arrow icon for collapsible summary */
+			.arrow {
+				display: inline-block;
+				margin-left: 0.75em;
+				font-size: 1.2em;
+				color: #222;
+				transition: transform 0.2s;
+			}
+			details.research-post[open] .arrow {
+				transform: rotate(90deg);
+				color: #888;
+			}
+
+			/* Display equation */
+			.equation {
+				margin: 1rem 0;
+				padding: 0.75rem 1rem;
+				border-left: solid 3px #ddd;
+				background: rgba(0,0,0,0.02);
+				font-family: 'Courier New', monospace;
+				text-align: center;
+			}
+
+			/* Active button style for Research */
+			.button.active {
+				background: #e0e0e0 !important;
+				color: #222 !important;
+				border-color: #bbb !important;
+				font-weight: bold;
+			}
+		</style>
+	</head>
+	<body class="is-preload">
+
+		<!-- Header -->
+		<header id="header">
+			<div class="inner">
+				<a href="#" class="image avatar"><img src="images/avatar.jpg" alt="" /></a>
+				<h1>
+					<strong>Abdelaziz Hussein</strong><br />
+				</h1>
+
+				<div class="button-block">
+					<ul class="actions stacked">
+						<li><a href="projects.html" class="button small fit active">Research</a></li>
+						<li><a href="#Outreach" class="button small fit">Outreach</a></li>
+						<li><a href="blogs.html" class="button small fit">Blogs</a></li>
+					</ul>
+				</div>
+			</div>
+		</header>
+
+		<!-- Main -->
+		<div id="main">
+
+			<section id="one">
+				<header class="major">
+					<h2>Research</h2>
+					<p>Theoretical astroparticle physics and dark matter studies. Click a title to expand each project.</p>
+				</header>
+
+				<section class="box alt">
+					<div class="row gtr-uniform">
+
+						<div class="col-12">
+							<!-- Project 1 -->
+							<details class="research-post" open>
+								<summary>
+									<h3>Theoretical Predictions for the Inner Dark Matter Distribution in the Milky Way</h3>
+									<span class="research-meta">arXiv:2501.14868 &mdash; Dark Matter</span>
+									<span class="arrow">&#9654;</span>
+								</summary>
+								<div class="research-content">
+									<ul class="actions">
+										<li><a href="https://github.com/abdelazizhussein/MW-Inner-DM-Profile" class="button small icon brands fa-github">MW-Inner-DM-Profile</a></li>
+										<li><a href="https://arxiv.org/abs/2501.14868" class="button small icon solid fa-file-alt">arXiv:2501.14868</a></li>
+									</ul>
+
+									<h4>Abstract</h4>
+									<p>We build a theoretical range for the Milky Way's inner dark matter distribution informed by the FIRE-2, Auriga, VINTERGATAN-GM, and TNG50 simulation suites, assuming the canonical cold dark matter (CDM) model. This work provides crucial constraints for direct detection experiments and indirect dark matter searches by establishing robust predictions for the local dark matter density profile.</p>
+
+									<h4>Physics &amp; Methodology</h4>
+									<p>The dark matter density profiles in Auriga, VINTERGATAN-GM, and TNG50 simulations can be approximately modeled using the adiabatic contraction prescription of Gnedin et al. (2004), while FIRE-2 exhibits stronger baryonic feedback, leading to departures from the adiabatic contraction model. The simulated halos that undergo adiabatic contraction are close to spherical with axis ratios q &isin; [0.75-0.9] at 5 kpc.</p>
+
+									<div class="equation">
+										&rho;(r) = &rho;&#8320; / [(r/r&#8347;)(1 + r/r&#8347;)&sup2;] &nbsp;&nbsp;&nbsp; (NFW Profile)
+									</div>
+
+									<p>We analyze the impact of baryonic physics on the dark matter distribution, particularly examining how stellar feedback and gravitational interactions modify the expected density profiles from dark matter-only simulations.</p>
+
+									<h4>Research Experience &amp; Impact</h4>
+									<p>This research combines theoretical modeling with cutting-edge cosmological simulations to understand how baryonic physics affects dark matter distributions in Milky Way-like galaxies. The work directly informs experimental searches for dark matter particles.</p>
+									<ul>
+										<li><strong>Theoretical Challenge:</strong> Reconciling different simulation predictions for inner galaxy dark matter profiles and understanding the role of baryonic feedback mechanisms.</li>
+										<li><strong>Computational Methods:</strong> Analysis of multiple state-of-the-art cosmological simulation suites (FIRE-2, Auriga, VINTERGATAN-GM, TNG50) to establish robust theoretical predictions.</li>
+										<li><strong>Experimental Relevance:</strong> Results provide critical input for direct detection experiments and constrain local dark matter density for particle physics searches.</li>
+									</ul>
+								</div>
+							</details>
+						</div>
+
+						<div class="col-12">
+							<!-- Project 2 -->
+							<details class="research-post">
+								<summary>
+									<h3>Stellar Feedback in Dark Matter Halos</h3>
+									<span class="research-meta">In preparation &mdash; Stellar Physics</span>
+									<span class="arrow">&#9654;</span>
+								</summary>
+								<div class="research-content">
+									<ul class="actions">
+										<li><a href="#" class="button small icon brands fa-github">stellar-feedback-sims</a></li>
+										<li><a href="#" class="button small icon solid fa-file-alt">Draft Paper</a></li>
+									</ul>
+
+									<h4>Overview</h4>
+									<p>Investigation of how stellar feedback mechanisms &mdash; including supernovae, stellar winds, and radiation pressure &mdash; affect the distribution and dynamics of dark matter in galactic halos. This work explores the complex interplay between baryonic and dark matter components in galaxy formation.</p>
+
+									<h4>Physical Processes</h4>
+									<p>We study energy injection from stellar processes and its impact on dark matter halo structure. Key mechanisms include supernova explosions that can create cavities in the dark matter distribution, and stellar winds that provide continuous energy input affecting the gravitational potential.</p>
+								</div>
+							</details>
+						</div>
+
+						<div class="col-12">
+							<!-- Project 3 -->
+							<details class="research-post">
+								<summary>
+									<h3>Galactic Dynamics</h3>
+									<span class="research-meta">Details coming soon</span>
+									<span class="arrow">&#9654;</span>
+								</summary>
+								<div class="research-content">
+									<p>Details coming soon.</p>
+								</div>
+							</details>
+						</div>
+
+						<div class="col-12">
+							<!-- Project 4 -->
+							<details class="research-post">
+								<summary>
+									<h3>Cosmological Simulations</h3>
+									<span class="research-meta">Details coming soon</span>
+									<span class="arrow">&#9654;</span>
+								</summary>
+								<div class="research-content">
+									<p>Details coming soon.</p>
+								</div>
+							</details>
+						</div>
+
+					</div>
+				</section>
+
+			</section>
+
+		</div>
+
+		<!-- Footer -->
+		<footer id="footer">
+			<div class="inner">
+				<ul class="icons">
+					<li><a href="https://orcid.org/0000-0002-5560-8668" class="icon brands fa-orcid"><span class="label">ORCID</span></a></li>
+					<li><a href="https://github.com/abdelazizhussein?tab=repositories" class="icon brands fa-github"><span class="label">Github</span></a></li>
+					<li><a href="mailto:abdelh@mit.edu" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
+				</ul>
+				<ul class="copyright">
+					<li>&copy; Abdelaziz Hussein</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+				</ul>
+			</div>
+		</footer>
+
+		<!-- Scripts -->
+		<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/jquery.poptrox.min.js"></script>
+		<script src="assets/js/browser.min.js"></script>
+		<script src="assets/js/breakpoints.min.js"></script>
+		<script src="assets/js/util.js"></script>
+		<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
