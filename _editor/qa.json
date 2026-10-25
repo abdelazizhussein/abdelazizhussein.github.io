@@ -1,0 +1,9 @@
+{
+  "heading": "Q&A",
+  "intro": "<p>This is a public forum of sorts. Ask me anything about life in academia, applying to grad school or postdocs, or research itself. Answered questions will appear on this page so others can benefit too.</p>",
+  "formHint": "Questions are sent straight to my inbox. Answered questions are posted here with your name, and I'll email you when yours is up.",
+  "formEndpoint": "https://formsubmit.co/ajax/abdelh@mit.edu",
+  "ownerEmail": "abdelh@mit.edu",
+  "subjectTag": "[Website Q&A]",
+  "items": []
+}

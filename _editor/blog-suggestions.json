@@ -1,0 +1,55 @@
+{
+  "header-sub": {
+    "text": "A few posts on physics, its history, and how we learn it. Click a title to expand a post.",
+    "why": "The original works fine; this version tells readers what the posts are about."
+  },
+  "post1-title": {
+    "text": "Science History Book Recommendations",
+    "why": "Plural, since there are several books. The 'Popular Science' label is now an icon."
+  },
+  "post1-p1": {
+    "text": "More often than not, physics is taught as a collection of equations to memorize and plug numbers into. That picture could not be further from the truth. Science is done by humans (at least until recently; with the advent of AI the conversation gets much more complicated, and since many people are already chiming in, I will stay out of it here. See <a href=\"https://arxiv.org/abs/2602.10181\">David Hogg's take (arXiv:2602.10181)</a> for a great discussion). The train of thought behind a result, which can take decades and many failed attempts, is as important to learn as the material itself if you intend to pursue physics as a career.",
+    "why": "'to be memorized and to plug numbers into to obtain results' was clunky; 'till' → 'until'; the long parenthetical is split so it reads cleanly; 'that at times take' had a subject–verb mismatch.",
+    "idea": "Ideas for an extra line: a specific moment when learning the history changed how you understood a topic, or the first book that hooked you."
+  },
+  "post1-p2": {
+    "text": "Below is a non-comprehensive list of books that I really enjoyed and that helped me put some of the physics I learned, and the physicists who came up with it, in context.",
+    "why": "'non-comprehensive' takes a hyphen; 'contextualize … and the physicists' was ambiguous."
+  },
+  "post1-book-dirac": {
+    "text": "A biography of Dirac. It is excellent until the final chapters, where some of the claims about Dirac giving birth to string theory are too speculative.",
+    "why": "Split the run-on sentence and smoothed 'birthing string theory'.",
+    "idea": "The other two books have no note. A one-liner for each (what you liked most) would make the list feel more personal."
+  },
+  "post2-title": {
+    "text": "Science History Articles",
+    "why": "The 'Mathematical Details' label is now an icon (also fixed the 'matthematical' typo)."
+  },
+  "post2-p1": {
+    "text": "For those looking for more detailed accounts, here are some articles that have shocked and inspired me.",
+    "why": "'recounts' is a verb; the noun is 'accounts'. Dropped 'I thought I would mention'."
+  },
+  "post2-h1": {
+    "text": "Noether's Theorem and Its Connection to General Relativity",
+    "why": "Title case to match the other headings; 'the connection' → 'its connection'."
+  },
+  "post2-p2": {
+    "text": "Unfortunately, I was introduced to Noether's theorem without the context that gives it its beauty. One of the most beautiful theorems in physics deserves a proper introduction. In fact, the theorem grew out of Noether's work with Hilbert and Klein on understanding energy conservation in general relativity. A lovely historical account, along with some mathematical details, can be found here (and in the references therein):",
+    "why": "'shed away its beauty' → clearer phrasing; 'its proper' → 'a proper'; the Klein sentence was tangled. I added Hilbert because the Rowe article is about Hilbert asking Noether to work on this; remove him if you prefer.",
+    "idea": "Idea: one sentence on what surprised you most in the article, e.g. that a student's notes preserved part of Noether's lost manuscript."
+  },
+  "post3-title": {
+    "text": "Incomplete and Incorrect Theories Should Be Encouraged",
+    "why": "Title case."
+  },
+  "post3-p1": {
+    "text": "One thing that truly bothers me is how physics classes often move at a pace that strips away the years (or even decades) it took to develop not only a theory but also the intuition behind it. One of the most interesting examples, and one rarely discussed in undergraduate classes, is the history of the strong force. I stumbled upon it while reading the Wikipedia page on the Yukawa potential and its origins. Physicists wrestled with why the nucleus doesn't blow itself apart under the repulsion between its protons, and with whether the neutron is a composite particle (made up of an electron and a proton). Heisenberg, best known for his uncertainty principle, played a key role in refining our understanding of the strong force and in part inspired the work of Yukawa and later Fermi. Though his theory was incomplete and incorrect, it contained remarkable insights, such as isospin, and eventually paved the way to a coherent theory of the strong force. I truly see it as a necessary step in that development, and I think students should be encouraged to see incomplete and incorrect theories the same way: they are often a necessary step toward a coherent theory.",
+    "why": "The first sentence had two verbs ('are structured … teach'); 'wiki' → 'Wikipedia'; 'People wrestled with the idea of why' tightened; the last two sentences repeated 'necessary step' and are now merged.",
+    "check": "Fact check: Fermi's beta decay theory (late 1933, published 1934) came before Yukawa's meson theory (1935). 'Yukawa and later Fermi' may need to become 'Fermi and later Yukawa'.",
+    "idea": "This is a long paragraph. Consider splitting it after '…its origins.' and adding a line about how this changed the way you approach your own half-working ideas."
+  },
+  "post3-p2": {
+    "text": "Below is an incomplete list of historical accounts of how the subject developed:",
+    "why": "'recounts' → 'accounts'; 'some … incomplete list' was redundant."
+  }
+}

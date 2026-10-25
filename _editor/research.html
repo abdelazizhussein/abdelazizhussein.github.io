@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Research Editor</title>
+<style>
+  :root {
+    --bg: #f6f5f1; --card: #fff; --ink: #222; --muted: #777; --line: #e3e1da;
+    --accent: #49bf9d; --accent-ink: #1d6b52; --warn: #fff4d6; --danger: #c0392b; --new: #e8f6ff;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 14px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    display: flex; flex-direction: column; }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  button { cursor: pointer; border-radius: 999px; border: 1px solid #ccc; background: #fff; padding: 0.25rem 0.75rem; font-size: 0.8rem; white-space: nowrap; }
+  button:hover { border-color: var(--accent); color: var(--accent-ink); }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+  button.primary:disabled { opacity: 0.45; cursor: default; }
+  button.icon { padding: 0.15rem 0.5rem; border-radius: 6px; }
+  button.danger:hover { border-color: var(--danger); color: var(--danger); }
+  button.on { background: #1f1d1b; color: #fff; border-color: #1f1d1b; }
+
+  header.top { background: #1f1d1b; color: #eee; display: flex; align-items: center; gap: 0.9rem; padding: 0.6rem 1rem; flex-wrap: wrap; }
+  header.top h1 { font-size: 0.95rem; margin: 0; font-weight: 600; }
+  header.top .spacer { flex: 1; }
+  header.top .status { font-size: 0.8rem; color: #aaa; }
+  header.top a { color: #9fe0cb; font-size: 0.8rem; }
+  .tabs { display: flex; gap: 0.25rem; }
+  .tabs button { background: transparent; color: #ccc; border-color: #444; }
+  .tabs button.on { background: #fff; color: #222; border-color: #fff; }
+
+  .wrap { flex: 1; display: grid; grid-template-columns: minmax(380px, 1fr) minmax(360px, 1.1fr); min-height: 0; }
+  .panel { overflow-y: auto; padding: 1rem 1.1rem 4rem; }
+  .preview { border-left: 1px solid var(--line); display: flex; flex-direction: column; min-height: 0; background: #ddd; }
+  .preview .pbar { display: flex; gap: 0.4rem; align-items: center; padding: 0.4rem 0.6rem; background: #eee; border-bottom: 1px solid var(--line); font-size: 0.8rem; color: var(--muted); }
+  .preview .pbar .spacer { flex: 1; }
+  .preview .frame { flex: 1; position: relative; overflow: hidden; }
+  .preview iframe { position: absolute; top: 0; left: 0; border: 0; background: #fff; transform-origin: 0 0; }
+  .preview.phone .frame { display: flex; justify-content: center; }
+  .preview.phone iframe { position: static; width: 390px; height: 100%; box-shadow: 0 0 0 1px #bbb; }
+
+  h2.sec { font-size: 1.05rem; margin: 0.25rem 0 0.25rem; }
+  p.help { color: var(--muted); font-size: 0.85rem; margin: 0 0 1rem; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; margin-bottom: 0.75rem; }
+  .card .head { display: flex; align-items: center; gap: 0.4rem; padding: 0.55rem 0.75rem; flex-wrap: wrap; }
+  .card .body { padding: 0.25rem 0.75rem 0.75rem; display: grid; gap: 0.6rem; }
+  .card.muted { opacity: 0.55; }
+  .card.isnew { border-color: #7fbfea; background: var(--new); }
+  label.f { display: grid; gap: 0.2rem; font-size: 0.75rem; color: var(--muted); }
+  label.f input, label.f select, label.f textarea, .rich {
+    font-size: 0.9rem; color: var(--ink); border: 1px solid #d8d6cf; border-radius: 6px; padding: 0.4rem 0.55rem; background: #fff; width: 100%; }
+  label.f textarea { resize: vertical; min-height: 4.5rem; }
+  label.f textarea.mono, .mono { font-family: ui-monospace, Menlo, monospace; font-size: 0.85rem; }
+  input:focus, select:focus, textarea:focus, .rich:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(73,191,157,0.15); }
+  .rich { min-height: 2.2rem; line-height: 1.6; }
+  .rich.tall { min-height: 7rem; }
+  .rich p { margin: 0 0 0.6em; } .rich p:last-child { margin-bottom: 0; }
+  .rich ul { margin: 0; padding-left: 1.2rem; }
+  .rich:empty::before { content: attr(data-placeholder); color: #aaa; }
+  .rich a { color: #2a9d7c; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+  .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.6rem; }
+  .checks { display: flex; gap: 1rem; flex-wrap: wrap; font-size: 0.85rem; }
+  .checks label { display: flex; gap: 0.35rem; align-items: center; cursor: pointer; }
+  .title-input { flex: 1; min-width: 12rem; font-size: 1rem; font-weight: 600; border: 1px solid transparent; border-radius: 6px; padding: 0.3rem 0.45rem; background: transparent; }
+  .title-input:hover { border-color: #ddd; }
+  .title-input:focus { border-color: var(--accent); background: #fff; outline: none; }
+  .chip { font-size: 0.7rem; padding: 0.05rem 0.5rem; border-radius: 999px; background: #eee; color: #555; }
+  .chip.new { background: #cfe9fb; color: #1b5f8c; }
+  .chip.warn { background: var(--warn); color: #8a6100; }
+  .group-h { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 1.1rem 0 0.5rem; }
+  .pub-title { flex: 1; min-width: 12rem; font-weight: 600; font-size: 0.9rem; line-height: 1.35; }
+  .pub-sub { width: 100%; font-size: 0.78rem; color: var(--muted); }
+
+  .block { border: 1px solid var(--line); border-radius: 6px; background: #fcfcfa; }
+  .block .bh { display: flex; align-items: center; gap: 0.3rem; padding: 0.3rem 0.5rem; border-bottom: 1px solid var(--line); font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+  .block .bh .spacer { flex: 1; }
+  .block .bb { padding: 0.5rem; display: grid; gap: 0.5rem; }
+  .block input.heading { font-weight: 600; font-size: 0.95rem; }
+  .addbar { display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center; font-size: 0.8rem; color: var(--muted); }
+  .links .lrow { display: grid; grid-template-columns: 1fr 1.6fr 7rem auto; gap: 0.4rem; align-items: center; }
+  .links .lrow input, .links .lrow select { font-size: 0.85rem; border: 1px solid #d8d6cf; border-radius: 6px; padding: 0.3rem 0.45rem; width: 100%; background: #fff; }
+  .links .lrow input.bad { border-color: #e5b94e; background: var(--warn); }
+
+  .drop { border: 2px dashed #cfcdc5; border-radius: 8px; padding: 0.75rem; text-align: center; color: var(--muted); cursor: pointer; background: #fff; transition: border-color 0.15s, background 0.15s; outline: none; }
+  .drop:hover, .drop:focus, .drop.over { border-color: var(--accent); background: #f3fbf8; }
+  .drop img { max-width: 100%; max-height: 220px; display: block; margin: 0 auto 0.4rem; border-radius: 4px; }
+  .drop .missing { color: #8a6100; background: var(--warn); border-radius: 6px; padding: 0.5rem; margin-bottom: 0.4rem; }
+  .drop small { display: block; font-size: 0.75rem; }
+
+  .toast { position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%); background: #1f1d1b; color: #fff; padding: 0.5rem 1rem; border-radius: 999px; font-size: 0.85rem; opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 10; }
+  .toast.show { opacity: 1; }
+  .kbd { font-family: ui-monospace, Menlo, monospace; font-size: 0.75rem; background: #eee; border-radius: 4px; padding: 0 0.3rem; }
+
+  @media (max-width: 900px) {
+    .wrap { grid-template-columns: 1fr; grid-template-rows: auto 70vh; overflow-y: auto; }
+    .panel { overflow: visible; }
+    .preview { border-left: 0; border-top: 1px solid var(--line); }
+    .row2, .row3, .links .lrow { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>Research editor</h1>
+  <div class="tabs" id="tabs">
+    <button data-tab="about">About me</button>
+    <button data-tab="pubs">Publications</button>
+    <button data-tab="projects">Projects</button>
+  </div>
+  <span class="spacer"></span>
+  <span class="status" id="status">Loading…</span>
+  <a href="/blog">Blog editor</a>
+  <a href="/projects.html" target="_blank">Open saved page ↗</a>
+  <button class="primary" id="saveBtn" disabled>Save to projects.html</button>
+</header>
+
+<div class="wrap">
+  <div class="panel" id="panel"></div>
+  <div class="preview" id="preview">
+    <div class="pbar">
+      <span>Live preview (not saved yet until you press Save)</span>
+      <span class="spacer"></span>
+      <button id="vDesk" class="on">Desktop</button>
+      <button id="vPhone">Phone</button>
+    </div>
+    <div class="frame" id="frame"><iframe id="pv" title="Page preview"></iframe></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<input type="file" id="filePick" accept="image/*,application/pdf,.pdf" hidden>
+
+<script>
+let model = null, tab = "about", dirty = false;
+const $ = (s, el = document) => el.querySelector(s);
+const h = (tag, props = {}, ...kids) => {
+  const el = document.createElement(tag);
+  for (const [k, v] of Object.entries(props)) {
+    if (k === "class") el.className = v;
+    else if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
+    else if (k === "html") el.innerHTML = v;
+    else if (v !== false && v != null) el.setAttribute(k, v === true ? "" : v);
+  }
+  for (const c of kids.flat()) if (c != null && c !== false) el.append(c.nodeType ? c : document.createTextNode(c));
+  return el;
+};
+const uid = p => p + "-" + Math.random().toString(36).slice(2, 7);
+const escText = s => s.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+
+// ---------- change tracking + preview
+function changed(rerender = false) {
+  dirty = true; updateStatus();
+  if (rerender) render();
+  schedulePreview();
+}
+function updateStatus() {
+  $("#status").textContent = dirty ? "Unsaved changes" : "All changes saved";
+  $("#saveBtn").disabled = !dirty;
+}
+let pvTimer = null, pvAnchor = null;
+function schedulePreview(anchor) { if (anchor) pvAnchor = anchor; clearTimeout(pvTimer); pvTimer = setTimeout(refreshPreview, 350); }
+async function refreshPreview() {
+  const iframe = $("#pv");
+  let y = 0; try { y = iframe.contentWindow.scrollY || 0; } catch (e) {}
+  const r = await fetch("/api/research/preview", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(model) });
+  const html = await r.text();
+  const anchor = pvAnchor; pvAnchor = null;
+  iframe.onload = () => {
+    const w = iframe.contentWindow;
+    const go = () => {
+      if (anchor) { const t = w.document.getElementById(anchor); if (t) { if (t.tagName === "DETAILS") t.open = true; t.scrollIntoView({ block: "start" }); return; } }
+      w.scrollTo(0, y);
+    };
+    go(); setTimeout(go, 150);
+  };
+  iframe.srcdoc = html;
+}
+function layoutPreview() {
+  const pv = $("#preview"), frame = $("#frame"), iframe = $("#pv");
+  if (pv.classList.contains("phone")) { iframe.style.transform = ""; iframe.style.width = ""; iframe.style.height = ""; return; }
+  const W = 1280, s = Math.min(1, frame.clientWidth / W);
+  iframe.style.width = W + "px"; iframe.style.height = (frame.clientHeight / s) + "px"; iframe.style.transform = `scale(${s})`;
+}
+window.addEventListener("resize", layoutPreview);
+$("#vDesk").onclick = () => { $("#preview").classList.remove("phone"); $("#vDesk").classList.add("on"); $("#vPhone").classList.remove("on"); layoutPreview(); };
+$("#vPhone").onclick = () => { $("#preview").classList.add("phone"); $("#vPhone").classList.add("on"); $("#vDesk").classList.remove("on"); layoutPreview(); };
+
+// ---------- inputs
+function field(obj, key, label, opts = {}) {
+  const tag = opts.textarea ? "textarea" : opts.options ? "select" : "input";
+  const el = h(tag, { placeholder: opts.placeholder || "", class: opts.mono ? "mono" : "" });
+  if (opts.options) for (const [v, t] of opts.options) el.append(h("option", { value: v }, t));
+  el.value = opts.get ? opts.get(obj[key]) : (obj[key] ?? "");
+  el.addEventListener(opts.options ? "change" : "input", () => {
+    obj[key] = opts.set ? opts.set(el.value) : el.value;
+    changed(!!opts.rerender); opts.after && opts.after();
+  });
+  return label ? h("label", { class: "f" }, label, el) : el;
+}
+function check(obj, key, label, invert = false) {
+  const c = h("input", { type: "checkbox" }); c.checked = invert ? !obj[key] : !!obj[key];
+  c.onchange = () => { obj[key] = invert ? !c.checked : c.checked; changed(true); };
+  return h("label", {}, c, label);
+}
+// Turn contenteditable output into clean paragraphs.
+function cleanBlock(el) {
+  const out = []; let inline = "";
+  const flush = () => { const t = inline.trim(); if (t && t !== "<br>") out.push("<p>" + t.replace(/<br>$/, "") + "</p>"); inline = ""; };
+  el.childNodes.forEach(n => {
+    if (n.nodeType === 1 && (n.tagName === "P" || n.tagName === "DIV")) { flush(); inline = n.innerHTML; flush(); }
+    else if (n.nodeType === 1 && (n.tagName === "UL" || n.tagName === "OL")) { flush(); out.push(n.outerHTML); }
+    else inline += n.nodeType === 3 ? escText(n.textContent) : n.outerHTML;
+  });
+  flush(); return out.join("");
+}
+const cleanInline = el => cleanBlock(el).replace(/<\/p><p>/g, " ").replace(/^<p>|<\/p>$/g, "");
+function rich(obj, key, opts = {}) {
+  const el = h("div", { class: "rich" + (opts.tall ? " tall" : ""), contenteditable: "true", "data-placeholder": opts.placeholder || "" });
+  el.innerHTML = obj[key] || "";
+  el.addEventListener("input", () => {
+    obj[key] = opts.list ? el.innerHTML.replace(/\s+/g, " ").trim() : opts.inline ? cleanInline(el) : cleanBlock(el);
+    changed(); opts.anchor && schedulePreview(opts.anchor);
+  });
+  el.addEventListener("keydown", e => {
+    if (opts.inline && e.key === "Enter") e.preventDefault();
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+      e.preventDefault(); const url = prompt("Link URL:"); if (url) document.execCommand("createLink", false, url);
+      el.dispatchEvent(new Event("input"));
+    }
+  });
+  el.addEventListener("paste", e => { e.preventDefault(); document.execCommand("insertText", false, e.clipboardData.getData("text/plain")); });
+  el.addEventListener("focus", () => document.execCommand("defaultParagraphSeparator", false, "p"));
+  return opts.label ? h("label", { class: "f" }, opts.label, el) : el;
+}
+function moveBtns(arr, i, rerender = true) {
+  return [
+    h("button", { class: "icon", title: "Move up", disabled: i === 0, onclick: () => { [arr[i - 1], arr[i]] = [arr[i], arr[i - 1]]; changed(rerender); } }, "↑"),
+    h("button", { class: "icon", title: "Move down", disabled: i === arr.length - 1, onclick: () => { [arr[i + 1], arr[i]] = [arr[i], arr[i + 1]]; changed(rerender); } }, "↓"),
+  ];
+}
+
+// ---------- About
+function renderAbout() {
+  const a = model.about;
+  return [
+    h("h2", { class: "sec" }, "About me"),
+    h("p", { class: "help" }, "Shown at the top of the Research page. Leave it empty to hide the section. Press Enter for a new paragraph, ",
+      h("span", { class: "kbd" }, "⌘B"), " / ", h("span", { class: "kbd" }, "⌘I"), " for bold/italic, ", h("span", { class: "kbd" }, "⌘K"), " to add a link."),
+    h("div", { class: "card" }, h("div", { class: "body", style: "padding-top:0.75rem" },
+      field(a, "heading", "Section heading", { placeholder: "About Me" }),
+      rich(a, "html", { tall: true, label: "Text", anchor: "about", placeholder: "I'm a physicist working on… (write a few sentences about yourself, your research interests, and where you are)" }),
+    )),
+  ];
+}
+
+// ---------- Publications
+const pubKey = p => (p.arxiv || "").trim() || (p.doi || "").toLowerCase().trim() || p.title.toLowerCase().replace(/[^a-z0-9]/g, "");
+const isMe = a => { const [fam, giv = ""] = a.split(",").map(s => s.trim()); return fam.toLowerCase() === model.me.family.toLowerCase() && giv.toUpperCase().startsWith(model.me.initial); };
+const myPos = p => { const i = p.authors.findIndex(isMe); return i < 0 ? 99 : i + 1; };
+const ordinal = n => n === 99 ? "Not listed as" : n + (n % 100 >= 11 && n % 100 <= 13 ? "th" : ["th", "st", "nd", "rd"][n % 10] || "th");
+const openPubs = new Set();
+function renderPubs() {
+  const pubs = model.publications.slice().sort((a, b) => (b.date || b.year || "").localeCompare(a.date || a.year || ""));
+  const groups = [["main", "Publications (1st or 2nd author)"], ["nth", "Nth author"]];
+  return [
+    h("h2", { class: "sec" }, "Publications"),
+    h("p", { class: "help" }, "Papers where you're 1st or 2nd author go under Publications; the rest go under Nth author (decided by your place in the author list). Newest first. Use the checkbox to hide a paper. ",
+      "\"Check ORCID\" looks up your ORCID record (", model.me.orcid, "), skips talks and conference proceedings, adds new papers, and fills in journal details once a preprint is published."),
+    h("div", { class: "addbar" },
+      h("button", { onclick: syncPubs, id: "syncBtn" }, "⟳ Check ORCID for new papers"),
+      h("button", { onclick: () => { const p = { id: uid("pub"), title: "New paper", authors: [`${model.me.family}, ${model.me.initial}.`], arxiv: "", doi: "", venue: "", code: "", date: new Date().toISOString().slice(0, 10), year: String(new Date().getFullYear()), role: "first", hidden: false }; model.publications.push(p); openPubs.add(p.id); changed(true); } }, "+ Add publication manually")),
+    groups.map(([role, label]) => {
+      const list = pubs.filter(p => (myPos(p) <= 2 ? "main" : "nth") === role);
+      return [h("div", { class: "group-h" }, `${label} (${list.filter(p => !p.hidden).length} shown)`), list.map(renderPub)];
+    }),
+  ];
+}
+function renderPub(p) {
+  const open = openPubs.has(p.id);
+  const sub = [p.year, p.venue || (p.arxiv ? "arXiv:" + p.arxiv : ""), `${p.authors.length} author${p.authors.length === 1 ? "" : "s"}`].filter(Boolean).join(" · ");
+  const card = h("div", { class: "card" + (p.hidden ? " muted" : "") + (p.isNew ? " isnew" : "") },
+    h("div", { class: "head" },
+      h("div", { class: "pub-title" }, p.title, p.isNew ? [" ", h("span", { class: "chip new" }, p.isNew)] : null),
+      h("div", { class: "checks" }, check(p, "hidden", "Show", true)),
+      h("span", { class: "chip" }, ordinal(myPos(p)) + " author"),
+      h("button", { onclick: () => { open ? openPubs.delete(p.id) : openPubs.add(p.id); render(); } }, open ? "Close" : "Edit"),
+      h("div", { class: "pub-sub" }, sub)),
+    open ? h("div", { class: "body" },
+      field(p, "title", "Title (LaTeX like $\\sqrt{s}$ works)", { textarea: false }),
+      field(p, "authors", "Authors, one per line as \"Last, First\" (you're shown in bold)", { textarea: true, get: v => v.join("\n"), set: v => v.split("\n").map(s => s.trim()).filter(Boolean), rerender: false }),
+      h("div", { class: "row3" },
+        field(p, "year", "Year"),
+        field(p, "date", "Date (for sorting)", { placeholder: "YYYY-MM-DD" }),
+        field(p, "arxiv", "arXiv ID", { placeholder: "2501.14868" })),
+      h("div", { class: "row2" },
+        field(p, "venue", "Journal (leave empty for a preprint)", { placeholder: "The Astrophysical Journal 1002, 8" }),
+        field(p, "doi", "DOI", { placeholder: "10.3847/…" })),
+      field(p, "code", "Code / data link (optional)", { placeholder: "https://github.com/…" }),
+      h("div", {}, h("button", { class: "danger", onclick: () => { if (confirm("Delete this publication from the page?")) { model.publications.splice(model.publications.indexOf(p), 1); changed(true); } } }, "Delete publication")),
+    ) : null);
+  return card;
+}
+async function syncPubs() {
+  const btn = $("#syncBtn"); btn.disabled = true; btn.textContent = "Checking ORCID…";
+  try {
+    const r = await fetch("/api/sync-publications", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ orcid: model.me.orcid }) });
+    const d = await r.json(); if (d.error) throw new Error(d.error);
+    let added = 0, updated = 0;
+    const byKey = new Map(); model.publications.forEach(p => { byKey.set(pubKey(p), p); if (p.doi) byKey.set(p.doi.toLowerCase(), p); byKey.set(p.title.toLowerCase().replace(/[^a-z0-9]/g, ""), p); });
+    for (const f of d.found) {
+      const ex = byKey.get(pubKey(f)) || (f.doi && byKey.get(f.doi.toLowerCase())) || byKey.get(f.title.toLowerCase().replace(/[^a-z0-9]/g, ""));
+      if (!ex) {
+        model.publications.push({ ...f, id: uid("pub"), role: f.authors[0] && isMe(f.authors[0]) ? "first" : "co", hidden: false, isNew: "new from ORCID" }); added++;
+      } else if (f.doi && !ex.doi) {
+        Object.assign(ex, { doi: f.doi, venue: f.venue || ex.venue, isNew: "now published" }); updated++;
+      }
+    }
+    toast(added || updated ? `${added} new, ${updated} updated. Review them, then Save.` : `Up to date (${d.found.length} papers on ORCID${d.skipped.length ? `, ${d.skipped.length} talks/proceedings skipped` : ""})`);
+    if (added || updated) changed(true); else render();
+  } catch (e) { toast("ORCID check failed: " + e.message); render(); }
+}
+
+// ---------- Projects
+const ICONS = [["github", "GitHub"], ["paper", "Paper"], ["data", "Data"], ["slides", "Slides"], ["video", "Video"], ["link", "Link"]];
+const BLOCKS = { heading: "Heading", text: "Text", figure: "Figure", equation: "Equation", list: "Bullet list" };
+const collapsed = new Set();
+function newBlock(type) {
+  return { heading: { type, text: "" }, text: { type, html: "" }, figure: { type, src: "", alt: "", caption: "", size: "full" },
+    equation: { type, latex: "", label: "" }, list: { type, html: "<ul><li></li></ul>" } }[type];
+}
+function renderProjects() {
+  return [
+    h("h2", { class: "sec" }, "Research projects"),
+    h("p", { class: "help" }, "Each project is a collapsible card on the page. Build it from blocks (text, figures, equations…). Drag an image onto a figure block to upload it into ",
+      h("span", { class: "kbd" }, "images/research/"), ". Buttons whose link is empty or \"#\" are left off the page."),
+    h("div", { class: "card" }, h("div", { class: "body", style: "padding-top:0.75rem" }, field(model, "projectsHeading", "Section heading", { placeholder: "Research Projects" }))),
+    model.projects.map((p, i) => renderProject(p, i)),
+    h("div", { class: "addbar" }, h("button", { onclick: () => { const p = { id: uid("project"), title: "New project", meta: "", open: false, hidden: false, links: [], blocks: [newBlock("text")] }; model.projects.push(p); changed(true); schedulePreview(p.id); } }, "+ Add project")),
+  ];
+}
+function renderProject(p, i) {
+  const isCol = collapsed.has(p.id);
+  const title = h("input", { class: "title-input", value: p.title });
+  title.oninput = () => { p.title = title.value; changed(); schedulePreview(p.id); };
+  return h("div", { class: "card" + (p.hidden ? " muted" : "") },
+    h("div", { class: "head" },
+      h("button", { class: "icon", title: isCol ? "Expand" : "Collapse", onclick: () => { isCol ? collapsed.delete(p.id) : collapsed.add(p.id); render(); } }, isCol ? "▸" : "▾"),
+      title, ...moveBtns(model.projects, i),
+      h("button", { class: "icon", title: "Show in preview", onclick: () => schedulePreview(p.id) }, "👁"),
+      h("button", { class: "icon danger", title: "Delete project", onclick: () => { if (confirm(`Delete "${p.title}"?`)) { model.projects.splice(i, 1); changed(true); } } }, "✕")),
+    isCol ? null : h("div", { class: "body" },
+      field(p, "meta", "Small label next to the title", { placeholder: "arXiv:2501.14868 — Dark Matter" }),
+      h("div", { class: "checks" }, check(p, "hidden", "Show on page", true), check(p, "open", "Expanded when the page loads")),
+      renderLinks(p),
+      h("div", { class: "group-h", style: "margin:0.4rem 0 0" }, "Content"),
+      p.blocks.map((b, j) => renderBlock(p, b, j)),
+      h("div", { class: "addbar" }, "Add:", Object.entries(BLOCKS).map(([t, l]) => h("button", { onclick: () => { p.blocks.push(newBlock(t)); changed(true); schedulePreview(p.id); } }, "+ " + l))),
+    ));
+}
+function renderLinks(p) {
+  return h("div", { class: "links" },
+    h("div", { class: "group-h", style: "margin:0.2rem 0 0.35rem" }, "Buttons"),
+    p.links.map((l, k) => {
+      const url = field(l, "url", null, { placeholder: "https://…" });
+      const bad = () => url.classList.toggle("bad", !l.url || l.url.trim() === "#"); bad(); url.addEventListener("input", bad);
+      url.title = "Empty or # links are hidden on the page";
+      return h("div", { class: "lrow" }, field(l, "label", null, { placeholder: "Label" }), url,
+        field(l, "icon", null, { options: ICONS }),
+        h("button", { class: "icon danger", onclick: () => { p.links.splice(k, 1); changed(true); } }, "✕"));
+    }),
+    h("div", { class: "addbar", style: "margin-top:0.35rem" }, h("button", { onclick: () => { p.links.push({ label: "", url: "", icon: "link" }); changed(true); } }, "+ Add button")));
+}
+function renderBlock(p, b, j) {
+  let body;
+  if (b.type === "heading") body = field(b, "text", null, { placeholder: "Heading" });
+  if (b.type === "heading") body.classList.add("heading");
+  if (b.type === "text") body = rich(b, "html", { tall: true, anchor: p.id, placeholder: "Write here. Inline math: $E = mc^2$" });
+  if (b.type === "list") body = rich(b, "html", { list: true, anchor: p.id });
+  if (b.type === "equation") body = [
+    field(b, "latex", "LaTeX (no $ signs needed)", { textarea: true, mono: true, placeholder: "\\rho(r) = \\frac{\\rho_0}{(r/r_s)(1+r/r_s)^2}" }),
+    field(b, "label", "Label under the equation (optional)", { placeholder: "NFW profile" })];
+  if (b.type === "figure") body = [
+    figureDrop(b, p),
+    rich(b, "caption", { inline: true, label: "Caption", anchor: p.id, placeholder: "What the figure shows" }),
+    h("div", { class: "row2" },
+      field(b, "alt", "Alt text (describe the image for screen readers)"),
+      field(b, "size", "Width", { options: [["full", "Full width"], ["medium", "Medium (70%)"], ["small", "Small (45%)"]] }))];
+  return h("div", { class: "block" },
+    h("div", { class: "bh" }, BLOCKS[b.type], h("span", { class: "spacer" }), ...moveBtns(p.blocks, j),
+      h("button", { class: "icon danger", title: "Remove block", onclick: () => { p.blocks.splice(j, 1); changed(true); } }, "✕")),
+    h("div", { class: "bb" }, body));
+}
+function figureDrop(b, p) {
+  const box = h("div", { class: "drop", tabindex: "0" });
+  const paint = () => {
+    box.innerHTML = "";
+    if (b.src) {
+      const img = h("img", { src: "/" + b.src + "?t=" + Date.now(), alt: "" });
+      img.onerror = () => { img.replaceWith(h("div", { class: "missing" }, `⚠ The file ${b.src} doesn't exist. Drop the figure here to upload it.`)); };
+      box.append(img, h("small", {}, (b.pdf ? `${b.src} (from ${b.pdf})` : b.src) + " — drop, paste or click to replace"));
+    } else box.append(h("div", {}, "🖼 Drop an image or PDF here, paste it (⌘V), or click to choose a file"), h("small", {}, "PDF gives the sharpest result. PNG, JPG, SVG, GIF and WebP also work."));
+  };
+  const upload = async file => {
+    if (!file) return;
+    const isPdf = file.type === "application/pdf" || /\.pdf$/i.test(file.name || "");
+    if (!isPdf && !file.type.startsWith("image/")) return toast("That isn't an image or PDF");
+    if (!isPdf && file.size > 5e6) toast("Heads up: this image is over 5 MB; it may load slowly on the site");
+    const base = (file.name || "figure").replace(/\.[^.]+$/, "");
+    try {
+      if (isPdf) {
+        box.innerHTML = "Rendering PDF…";
+        const png = await pdfToPng(file);
+        box.innerHTML = "Uploading…";
+        const pdfUp = await uploadData(file.name || "figure.pdf", await readAsDataURL(file));
+        const pngUp = await uploadData(base + ".png", png);
+        b.src = pngUp.src; b.pdf = pdfUp.src;
+        toast("PDF rendered to a sharp PNG; clicking the figure on the site opens the PDF");
+      } else {
+        box.innerHTML = "Uploading…";
+        const up = await uploadData(file.name || "figure.png", await readAsDataURL(file));
+        b.src = up.src; delete b.pdf;
+        toast("Uploaded to " + up.src);
+      }
+      if (!b.alt) b.alt = base.replace(/[-_]+/g, " ");
+      paint(); changed(); schedulePreview(p.id);
+    } catch (e) { toast("Upload failed: " + e.message); paint(); }
+  };
+  box.onclick = () => { const fp = $("#filePick"); fp.value = ""; fp.onchange = () => upload(fp.files[0]); fp.click(); };
+  box.ondragover = e => { e.preventDefault(); box.classList.add("over"); };
+  box.ondragleave = () => box.classList.remove("over");
+  box.ondrop = e => { e.preventDefault(); box.classList.remove("over"); upload(e.dataTransfer.files[0]); };
+  box.onpaste = e => { const f = [...e.clipboardData.files][0]; if (f) { e.preventDefault(); upload(f); } };
+  paint(); return box;
+}
+
+// ---------- uploads (PDF figures are rendered to a high-resolution PNG with PDF.js)
+const readAsDataURL = file => new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.onerror = rej; fr.readAsDataURL(file); });
+async function uploadData(name, data) {
+  const r = await fetch("/api/upload", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name, data }) });
+  const d = await r.json(); if (d.error) throw new Error(d.error); return d;
+}
+let pdfjs = null;
+async function pdfToPng(file, targetWidth = 2400) {
+  if (!pdfjs) {
+    pdfjs = await import("/vendor/pdf.min.mjs");
+    pdfjs.GlobalWorkerOptions.workerSrc = "/vendor/pdf.worker.min.mjs";
+  }
+  const doc = await pdfjs.getDocument({ data: new Uint8Array(await file.arrayBuffer()) }).promise;
+  if (doc.numPages > 1) toast(`This PDF has ${doc.numPages} pages; using page 1`);
+  const page = await doc.getPage(1);
+  const v1 = page.getViewport({ scale: 1 });
+  const scale = Math.min(targetWidth / v1.width, 4000 / Math.max(v1.width, v1.height));
+  const vp = page.getViewport({ scale });
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(vp.width); canvas.height = Math.round(vp.height);
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, canvas.width, canvas.height);  // PDFs are often transparent
+  await page.render({ canvasContext: ctx, viewport: vp }).promise;
+  return canvas.toDataURL("image/png");
+}
+
+// ---------- shell
+function render() {
+  const panel = $("#panel"), y = panel.scrollTop;
+  panel.innerHTML = "";
+  const content = tab === "about" ? renderAbout() : tab === "pubs" ? renderPubs() : renderProjects();
+  [content].flat(Infinity).forEach(n => n && panel.append(n));
+  document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("on", b.dataset.tab === tab));
+  panel.scrollTop = y;
+}
+document.querySelectorAll("#tabs button").forEach(b => b.onclick = () => {
+  tab = b.dataset.tab; $("#panel").scrollTop = 0; render();
+  schedulePreview({ about: "about", pubs: "publications", projects: "one" }[tab]);
+});
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove("show"), 3200); }
+async function save() {
+  if (!dirty) return;
+  const clean = JSON.parse(JSON.stringify(model)); clean.publications.forEach(p => delete p.isNew);
+  const r = await fetch("/api/research/save", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(clean) });
+  const d = await r.json();
+  if (!r.ok || d.error) return toast("Save failed: " + (d.error || r.status));
+  model.publications.forEach(p => delete p.isNew);
+  dirty = false; updateStatus(); render(); toast("Saved to projects.html");
+}
+$("#saveBtn").onclick = save;
+document.addEventListener("keydown", e => { if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "s") { e.preventDefault(); save(); } });
+window.addEventListener("beforeunload", e => { if (dirty) { e.preventDefault(); e.returnValue = ""; } });
+
+fetch("/api/research").then(r => r.json()).then(m => {
+  model = m; const want = location.hash.slice(1); if (["about", "pubs", "projects"].includes(want)) tab = want;
+  updateStatus(); render(); layoutPreview(); refreshPreview();
+}).catch(() => $("#status").textContent = "Couldn't reach the editor server");
+</script>
+</body>
+</html>

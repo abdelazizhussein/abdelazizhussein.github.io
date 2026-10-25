@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blog Editor</title>
+<style>
+  :root {
+    --bg: #f6f5f1; --card: #fff; --ink: #222; --muted: #777; --line: #e3e1da;
+    --accent: #49bf9d; --add: #d9f2e6; --del: #fbe0de; --warn: #fff4d6;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+  header.top { position: sticky; top: 0; z-index: 5; background: #1f1d1b; color: #eee;
+    display: flex; align-items: center; gap: 1rem; padding: 0.7rem 1.25rem; flex-wrap: wrap; }
+  header.top h1 { font-size: 1rem; margin: 0; flex: 1; font-weight: 600; }
+  header.top .status { font-size: 0.85rem; color: #aaa; }
+  button { font: inherit; cursor: pointer; border-radius: 999px; border: 1px solid #ccc;
+    background: #fff; color: #333; padding: 0.3rem 0.8rem; font-size: 0.8rem; }
+  button:hover { border-color: var(--accent); color: var(--accent); }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+  button.primary:hover { filter: brightness(1.05); color: #fff; }
+  button.primary:disabled { opacity: 0.45; cursor: default; }
+  header.top a { color: #9fe0cb; font-size: 0.85rem; }
+  main { max-width: 1200px; margin: 0 auto; padding: 1.25rem; }
+  h2.post { margin: 2rem 0 0.75rem; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: 8px; margin-bottom: 1rem; overflow: hidden; }
+  .block.changed { border-left: 4px solid var(--accent); }
+  .block .bar { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.9rem; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+  .block .bar .label { font-weight: 600; font-size: 0.85rem; flex: 1; }
+  .block .bar .chip { font-size: 0.72rem; padding: 0.1rem 0.5rem; border-radius: 999px; background: #eee; color: #555; }
+  .block.changed .bar .chip { background: var(--add); color: #1d6b52; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; }
+  .col { padding: 0.8rem 0.9rem; min-width: 0; }
+  .col + .col { border-left: 1px solid var(--line); }
+  .col .ch { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 0.35rem; }
+  .current { color: #555; }
+  .editable { outline: none; border: 1px dashed transparent; border-radius: 4px; padding: 0.25rem 0.35rem; margin: -0.25rem -0.35rem; min-height: 1.6em; }
+  .editable:hover { border-color: #ccc; }
+  .editable:focus { border-color: var(--accent); background: #fbfffd; }
+  .editable.big { font-size: 1.1rem; font-weight: 600; }
+  .editable:empty::before { content: attr(data-placeholder); color: #aaa; }
+  a { color: #2a9d7c; }
+  .diff { padding: 0.6rem 0.9rem; border-top: 1px solid var(--line); font-size: 0.88rem; color: #444; background: #fcfcfa; }
+  .diff ins { background: var(--add); text-decoration: none; border-radius: 2px; }
+  .diff del { background: var(--del); color: #a33; border-radius: 2px; }
+  .notes { padding: 0.5rem 0.9rem 0.7rem; border-top: 1px solid var(--line); font-size: 0.83rem; display: grid; gap: 0.35rem; }
+  .notes div { padding: 0.3rem 0.55rem; border-radius: 4px; background: #f3f3f0; }
+  .notes .check { background: var(--warn); }
+  .notes .idea { background: #eaf3fb; }
+  .added { padding: 0 0.9rem 0.8rem; display: grid; gap: 0.5rem; }
+  .added .newp { display: flex; gap: 0.5rem; align-items: flex-start; }
+  .added .newp .editable { flex: 1; background: #fbfffd; border: 1px dashed var(--accent); margin: 0; }
+  .help { color: var(--muted); font-size: 0.85rem; max-width: 70ch; }
+  .toast { position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%); background: #1f1d1b; color: #fff;
+    padding: 0.5rem 1rem; border-radius: 999px; font-size: 0.85rem; opacity: 0; transition: opacity 0.2s; pointer-events: none; }
+  .toast.show { opacity: 1; }
+  @media (max-width: 760px) {
+    .cols { grid-template-columns: 1fr; }
+    .col + .col { border-left: 0; border-top: 1px solid var(--line); }
+    main { padding: 1rem; }
+  }
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>Blog editor: blogs.html</h1>
+  <span class="status" id="status">Loading…</span>
+  <a href="/blogs.html" target="_blank">Preview page ↗</a>
+  <button class="primary" id="saveBtn" disabled>Save to blogs.html</button>
+</header>
+<main>
+  <p class="help">Left is what's on the site now; right is my proposed rewrite, which you can edit directly (links stay clickable while editing; select text and press ⌘K to add a link).
+    Use <b>Keep original</b> to reject a change. The highlighted box below each one shows what changed.
+    <b>+ Add paragraph</b> inserts a new paragraph right after that block. Nothing changes on disk until you press <b>Save</b>; a backup is kept at <code>blogs.html.bak</code>.</p>
+  <div id="root"></div>
+</main>
+<div class="toast" id="toast"></div>
+<script>
+const POSTS = { header: "Page intro", post1: "Post 1 · Book recommendations", post2: "Post 2 · Articles", post3: "Post 3 · Incomplete theories" };
+const LABELS = { title: "Title", p1: "Paragraph 1", p2: "Paragraph 2", p3: "Paragraph 3", p4: "Paragraph 4", p5: "Paragraph 5",
+  h1: "Section heading", sub: "Subtitle", "book-dirac": "Note under 'The Strangest Man'" };
+let blocks = [], state = {};
+
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => s.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+const textOf = html => { const d = document.createElement("div"); d.innerHTML = html; return d.textContent.replace(/\s+/g, " ").trim(); };
+const norm = html => html.replace(/\s+/g, " ").replace(/&nbsp;/g, " ").trim();
+
+function wordDiff(a, b) {
+  const A = a.split(/(\s+)/).filter(Boolean), B = b.split(/(\s+)/).filter(Boolean);
+  const n = A.length, m = B.length, L = Array.from({ length: n + 1 }, () => new Uint16Array(m + 1));
+  for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--)
+    L[i][j] = A[i] === B[j] ? L[i + 1][j + 1] + 1 : Math.max(L[i + 1][j], L[i][j + 1]);
+  const ops = []; let i = 0, j = 0;
+  while (i < n && j < m) {
+    if (A[i] === B[j]) { ops.push(["=", A[i]]); i++; j++; }
+    else if (L[i + 1][j] >= L[i][j + 1]) ops.push(["-", A[i++]]);
+    else ops.push(["+", B[j++]]);
+  }
+  while (i < n) ops.push(["-", A[i++]]);
+  while (j < m) ops.push(["+", B[j++]]);
+  // Group each changed stretch into one deleted chunk followed by one inserted chunk.
+  let out = "", k = 0;
+  while (k < ops.length) {
+    if (ops[k][0] === "=") { out += esc(ops[k++][1]); continue; }
+    let del = "", ins = "", end = k;
+    for (let t = k; t < ops.length; t++) {
+      const [op, tok] = ops[t];
+      if (op === "=" && !/^\s+$/.test(tok)) break;
+      if (op === "=") { if (!ops.slice(t + 1).some(o => o[0] !== "=" ) ) break; let nx = t + 1; if (nx < ops.length && ops[nx][0] === "=") break; del += tok; ins += tok; }
+      else if (op === "-") del += tok; else ins += tok;
+      end = t + 1;
+    }
+    del = del.trim(); ins = ins.trim();
+    if (del) out += `<del>${esc(del)}</del>`;
+    if (del && ins) out += " ";
+    if (ins) out += `<ins>${esc(ins)}</ins>`;
+    if (end < ops.length && ops[end][0] === "=" && !/^\s/.test(ops[end][1])) out += " ";
+    k = end;
+  }
+  return out;
+}
+
+function render() {
+  const root = $("#root"); root.innerHTML = ""; let lastPost = null;
+  for (const b of blocks) {
+    const [post, ...rest] = b.id.split("-"); const key = rest.join("-");
+    if (post !== lastPost) { root.insertAdjacentHTML("beforeend", `<h2 class="post">${POSTS[post] || post}</h2>`); lastPost = post; }
+    const st = state[b.id];
+    const el = document.createElement("section"); el.className = "block"; el.id = "b-" + b.id;
+    const s = b.suggestion || {};
+    el.innerHTML = `
+      <div class="bar">
+        <span class="label">${LABELS[key] || key}</span>
+        <span class="chip"></span>
+        <button data-act="orig">Keep original</button>
+        ${s.text ? `<button data-act="sugg">Use suggestion</button>` : ""}
+      </div>
+      <div class="cols">
+        <div class="col"><div class="ch">On the site now</div><div class="current ${b.tag !== "p" ? "big" : ""}">${b.html}</div></div>
+        <div class="col"><div class="ch">New version (edit me)</div><div class="editable ${b.tag !== "p" ? "big" : ""}" contenteditable="true"></div></div>
+      </div>
+      <div class="diff" hidden></div>
+      <div class="notes">${s.why ? `<div><b>Why:</b> ${esc(s.why)}</div>` : ""}${s.check ? `<div class="check"><b>Check:</b> ${esc(s.check)}</div>` : ""}${s.idea ? `<div class="idea"><b>Idea:</b> ${esc(s.idea)}</div>` : ""}</div>
+      <div class="added"></div>
+      ${b.tag === "p" ? `<div style="padding:0 0.9rem 0.8rem"><button data-act="add">+ Add paragraph after this</button></div>` : ""}`;
+    if (!$(".notes", el).innerHTML) $(".notes", el).remove();
+    const ed = $(".editable", el); ed.innerHTML = st.html;
+    ed.addEventListener("input", () => { st.html = ed.innerHTML; update(b, el); });
+    ed.addEventListener("keydown", e => {
+      if (e.key === "Enter" && b.tag !== "p") e.preventDefault();
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault(); const url = prompt("Link URL:"); if (url) document.execCommand("createLink", false, url);
+        st.html = ed.innerHTML; update(b, el);
+      }
+    });
+    ed.addEventListener("paste", e => { e.preventDefault(); document.execCommand("insertText", false, e.clipboardData.getData("text/plain")); });
+    el.addEventListener("click", e => {
+      const act = e.target.dataset.act; if (!act) return;
+      if (act === "orig") { st.html = b.html; ed.innerHTML = b.html; }
+      if (act === "sugg") { st.html = s.text; ed.innerHTML = s.text; }
+      if (act === "add") { st.added.push(""); renderAdded(b, el); }
+      update(b, el);
+    });
+    root.appendChild(el); renderAdded(b, el); update(b, el);
+  }
+}
+
+function renderAdded(b, el) {
+  const st = state[b.id], box = $(".added", el); box.innerHTML = "";
+  st.added.forEach((h, i) => {
+    const row = document.createElement("div"); row.className = "newp";
+    row.innerHTML = `<div class="editable" contenteditable="true" data-placeholder="Write your new paragraph…"></div><button>Remove</button>`;
+    const ed = $(".editable", row); ed.innerHTML = h;
+    ed.addEventListener("input", () => { st.added[i] = ed.innerHTML; updateStatus(); });
+    ed.addEventListener("paste", e => { e.preventDefault(); document.execCommand("insertText", false, e.clipboardData.getData("text/plain")); });
+    $("button", row).onclick = () => { st.added.splice(i, 1); renderAdded(b, el); updateStatus(); };
+    box.appendChild(row);
+    if (!h) setTimeout(() => ed.focus(), 0);
+  });
+}
+
+function update(b, el) {
+  const st = state[b.id], changed = norm(st.html) !== norm(b.html);
+  el.classList.toggle("changed", changed);
+  $(".chip", el).textContent = changed ? "will change" : "unchanged";
+  const d = $(".diff", el); d.hidden = !changed;
+  if (changed) d.innerHTML = wordDiff(textOf(b.html), textOf(st.html));
+  updateStatus();
+}
+
+function pending() {
+  const edits = {}, added = {};
+  for (const b of blocks) {
+    const st = state[b.id];
+    if (norm(st.html) !== norm(b.html)) edits[b.id] = norm(st.html);
+    const a = st.added.map(norm).filter(h => textOf(h));
+    if (a.length) added[b.id] = a;
+  }
+  return { edits, added };
+}
+
+function updateStatus() {
+  const { edits, added } = pending();
+  const n = Object.keys(edits).length, k = Object.values(added).reduce((x, y) => x + y.length, 0);
+  $("#status").textContent = n || k ? `${n} edited, ${k} new paragraph${k === 1 ? "" : "s"} — not saved` : "Everything saved";
+  $("#saveBtn").disabled = !(n || k);
+}
+
+function load(data, keepDrafts) {
+  blocks = data;
+  const old = state; state = {};
+  for (const b of blocks) {
+    const sugg = b.suggestion && b.suggestion.text;
+    // First load: start from the suggestion. After a save: show what's on disk.
+    state[b.id] = { html: keepDrafts ? b.html : (sugg || b.html), added: [] };
+  }
+  render();
+}
+
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); setTimeout(() => t.classList.remove("show"), 2200); }
+
+$("#saveBtn").onclick = async () => {
+  const body = pending();
+  const r = await fetch("/api/save", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  if (!r.ok) { toast("Save failed"); return; }
+  load(await r.json(), true); toast("Saved to blogs.html");
+};
+window.addEventListener("beforeunload", e => { if (!$("#saveBtn").disabled) { e.preventDefault(); e.returnValue = ""; } });
+
+fetch("/api/blocks").then(r => r.json()).then(d => load(d, false)).catch(() => $("#status").textContent = "Couldn't reach the server");
+</script>
+</body>
+</html>

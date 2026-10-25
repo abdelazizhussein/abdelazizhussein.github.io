@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Q&amp;A Editor</title>
+<style>
+  :root { --bg: #f6f5f1; --card: #fff; --ink: #222; --muted: #777; --line: #e3e1da; --accent: #49bf9d; --accent-ink: #1d6b52; --warn: #fff4d6; --danger: #c0392b; --new: #e8f6ff; --q: #3f6fb5; }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; display: flex; flex-direction: column; }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  button { cursor: pointer; border-radius: 999px; border: 1px solid #ccc; background: #fff; padding: 0.25rem 0.75rem; font-size: 0.8rem; white-space: nowrap; }
+  button:hover { border-color: var(--accent); color: var(--accent-ink); }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+  button.primary:hover { color: #fff; filter: brightness(1.05); }
+  button.primary:disabled { opacity: 0.45; cursor: default; }
+  button.danger:hover { border-color: var(--danger); color: var(--danger); }
+  button.on { background: #1f1d1b; color: #fff; border-color: #1f1d1b; }
+  header.top { background: #1f1d1b; color: #eee; display: flex; align-items: center; gap: 0.9rem; padding: 0.6rem 1rem; flex-wrap: wrap; }
+  header.top h1 { font-size: 0.95rem; margin: 0; font-weight: 600; }
+  header.top .spacer { flex: 1; }
+  header.top .status { font-size: 0.8rem; color: #aaa; }
+  header.top a { color: #9fe0cb; font-size: 0.8rem; }
+  .wrap { flex: 1; display: grid; grid-template-columns: minmax(380px, 1fr) minmax(360px, 1.1fr); min-height: 0; }
+  .panel { overflow-y: auto; padding: 1rem 1.1rem 4rem; }
+  .preview { border-left: 1px solid var(--line); display: flex; flex-direction: column; min-height: 0; background: #ddd; }
+  .preview .pbar { display: flex; gap: 0.4rem; align-items: center; padding: 0.4rem 0.6rem; background: #eee; border-bottom: 1px solid var(--line); font-size: 0.8rem; color: var(--muted); }
+  .preview .pbar .spacer { flex: 1; }
+  .preview .frame { flex: 1; position: relative; overflow: hidden; }
+  .preview iframe { position: absolute; top: 0; left: 0; border: 0; background: #fff; transform-origin: 0 0; }
+  .preview.phone .frame { display: flex; justify-content: center; }
+  .preview.phone iframe { position: static; width: 390px; height: 100%; box-shadow: 0 0 0 1px #bbb; }
+  h2.sec { font-size: 1.05rem; margin: 1.25rem 0 0.4rem; display: flex; align-items: center; gap: 0.5rem; }
+  h2.sec:first-child { margin-top: 0.25rem; }
+  p.help { color: var(--muted); font-size: 0.85rem; margin: 0 0 0.75rem; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; margin-bottom: 0.75rem; }
+  .card.isnew { border-color: #7fbfea; box-shadow: 0 0 0 3px var(--new); }
+  .card .head { display: flex; align-items: center; gap: 0.4rem; padding: 0.55rem 0.75rem; flex-wrap: wrap; border-bottom: 1px solid var(--line); }
+  .card .head .spacer { flex: 1; }
+  .card .body { padding: 0.75rem; display: grid; gap: 0.6rem; }
+  label.f { display: grid; gap: 0.2rem; font-size: 0.75rem; color: var(--muted); }
+  label.f input, label.f select, label.f textarea, .rich { font-size: 0.9rem; color: var(--ink); border: 1px solid #d8d6cf; border-radius: 6px; padding: 0.4rem 0.55rem; background: #fff; width: 100%; }
+  label.f textarea { resize: vertical; min-height: 4.5rem; line-height: 1.5; }
+  input:focus, select:focus, textarea:focus, .rich:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(73,191,157,0.15); }
+  .rich { min-height: 7rem; line-height: 1.6; }
+  .rich p { margin: 0 0 0.6em; } .rich p:last-child { margin-bottom: 0; }
+  .rich:empty::before { content: attr(data-placeholder); color: #aaa; }
+  .rich a { color: #2a9d7c; }
+  .row3 { display: grid; grid-template-columns: 2fr 1fr; gap: 0.6rem; }
+  .chip { font-size: 0.7rem; padding: 0.05rem 0.5rem; border-radius: 999px; background: #eee; color: #555; font-weight: 600; }
+  .chip.pub { background: #d9f2e6; color: var(--accent-ink); }
+  .chip.draft { background: var(--warn); color: #8a6100; }
+  .exchange { display: grid; gap: 0.6rem; }
+  .bubble { display: grid; grid-template-columns: 2rem 1fr; gap: 0.6rem; align-items: start; }
+  .badge { width: 2rem; height: 2rem; border-radius: 50%; color: #fff; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 1.2rem; }
+  .badge.q { background: var(--q); } .badge.a { background: var(--accent); }
+  .drop { border: 2px dashed #cfcdc5; border-radius: 8px; padding: 0.9rem; text-align: center; color: var(--muted); cursor: pointer; background: #fff; transition: border-color 0.15s, background 0.15s; }
+  .drop:hover, .drop.over { border-color: var(--accent); background: #f3fbf8; }
+  .steps { margin: 0 0 0.75rem; padding-left: 1.2rem; color: #555; font-size: 0.85rem; }
+  .steps li { margin-bottom: 0.25rem; }
+  .kbd { font-family: ui-monospace, Menlo, monospace; font-size: 0.78rem; background: #eee; border-radius: 4px; padding: 0 0.3rem; }
+  .empty { color: var(--muted); font-style: italic; font-size: 0.85rem; margin: 0 0 0.75rem; }
+  details.settings > summary { cursor: pointer; font-weight: 600; padding: 0.6rem 0.75rem; }
+  .toast { position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%); background: #1f1d1b; color: #fff; padding: 0.5rem 1rem; border-radius: 999px; font-size: 0.85rem; opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 10; max-width: 90vw; }
+  .toast.show { opacity: 1; }
+  @media (max-width: 900px) {
+    .wrap { grid-template-columns: 1fr; grid-template-rows: auto 70vh; overflow-y: auto; }
+    .panel { overflow: visible; }
+    .preview { border-left: 0; border-top: 1px solid var(--line); }
+    .row3 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>Q&amp;A editor</h1>
+  <span class="spacer"></span>
+  <span class="status" id="status">Loading…</span>
+  <a href="/research">Research editor</a>
+  <a href="/blog">Blog editor</a>
+  <a href="/qa.html" target="_blank">Open saved page ↗</a>
+  <button class="primary" id="saveBtn" disabled>Save to qa.html</button>
+</header>
+<div class="wrap">
+  <div class="panel" id="panel"></div>
+  <div class="preview" id="preview">
+    <div class="pbar"><span>Live preview (the form here never sends)</span><span class="spacer"></span>
+      <button id="vDesk" class="on">Desktop</button><button id="vPhone">Phone</button></div>
+    <div class="frame" id="frame"><iframe id="pv" title="Page preview"></iframe></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<input type="file" id="emlPick" accept=".eml,message/rfc822" hidden>
+
+<script>
+let model = null, dirty = false, pasted = "";
+const $ = (s, el = document) => el.querySelector(s);
+const h = (tag, props = {}, ...kids) => {
+  const el = document.createElement(tag);
+  for (const [k, v] of Object.entries(props)) {
+    if (k === "class") el.className = v;
+    else if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
+    else if (v !== false && v != null) el.setAttribute(k, v === true ? "" : v);
+  }
+  for (const c of kids.flat(Infinity)) if (c != null && c !== false) el.append(c.nodeType ? c : document.createTextNode(c));
+  return el;
+};
+const escText = s => s.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+const today = () => new Date().toISOString().slice(0, 10);
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove("show"), 3500); }
+
+// ---------- change tracking + preview
+function changed(rerender = false, anchor) { dirty = true; updateStatus(); if (rerender) render(); schedulePreview(anchor); }
+function updateStatus() { $("#status").textContent = dirty ? "Unsaved changes" : "All changes saved"; $("#saveBtn").disabled = !dirty; }
+let pvTimer = null, pvAnchor = null;
+function schedulePreview(anchor) { if (anchor) pvAnchor = anchor; clearTimeout(pvTimer); pvTimer = setTimeout(refreshPreview, 350); }
+async function refreshPreview() {
+  const iframe = $("#pv"); let y = 0; try { y = iframe.contentWindow.scrollY || 0; } catch (e) {}
+  const r = await fetch("/api/qa/preview", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(model) });
+  const html = await r.text(); const anchor = pvAnchor; pvAnchor = null;
+  iframe.onload = () => { const w = iframe.contentWindow; const go = () => { const t = anchor && w.document.getElementById(anchor); t ? t.scrollIntoView({ block: "start" }) : w.scrollTo(0, y); }; go(); setTimeout(go, 150); };
+  iframe.srcdoc = html;
+}
+function layoutPreview() {
+  const pv = $("#preview"), frame = $("#frame"), iframe = $("#pv");
+  if (pv.classList.contains("phone")) { iframe.style.transform = ""; iframe.style.width = ""; iframe.style.height = ""; return; }
+  const W = 1280, s = Math.min(1, frame.clientWidth / W);
+  iframe.style.width = W + "px"; iframe.style.height = (frame.clientHeight / s) + "px"; iframe.style.transform = `scale(${s})`;
+}
+window.addEventListener("resize", layoutPreview);
+$("#vDesk").onclick = () => { $("#preview").classList.remove("phone"); $("#vDesk").classList.add("on"); $("#vPhone").classList.remove("on"); layoutPreview(); };
+$("#vPhone").onclick = () => { $("#preview").classList.add("phone"); $("#vPhone").classList.add("on"); $("#vDesk").classList.remove("on"); layoutPreview(); };
+
+// ---------- inputs
+function field(obj, key, label, opts = {}) {
+  const tag = opts.textarea ? "textarea" : opts.options ? "select" : "input";
+  const el = h(tag, { placeholder: opts.placeholder || "", type: opts.type || false, rows: opts.rows || false });
+  if (opts.options) for (const v of opts.options) el.append(h("option", { value: v }, v));
+  el.value = opts.get ? opts.get(obj[key]) : (obj[key] ?? "");
+  el.addEventListener(opts.options ? "change" : "input", () => { obj[key] = opts.set ? opts.set(el.value) : el.value; changed(!!opts.rerender, opts.anchor); });
+  return label ? h("label", { class: "f" }, label, el) : el;
+}
+function cleanBlock(el) {
+  const out = []; let inline = "";
+  const flush = () => { const t = inline.trim(); if (t && t !== "<br>") out.push("<p>" + t.replace(/<br>$/, "") + "</p>"); inline = ""; };
+  el.childNodes.forEach(n => {
+    if (n.nodeType === 1 && (n.tagName === "P" || n.tagName === "DIV")) { flush(); inline = n.innerHTML; flush(); }
+    else if (n.nodeType === 1 && (n.tagName === "UL" || n.tagName === "OL")) { flush(); out.push(n.outerHTML); }
+    else inline += n.nodeType === 3 ? escText(n.textContent) : n.outerHTML;
+  });
+  flush(); return out.join("");
+}
+function rich(obj, key, label, opts = {}) {
+  const el = h("div", { class: "rich", contenteditable: "true", "data-placeholder": opts.placeholder || "" });
+  el.innerHTML = obj[key] || "";
+  el.addEventListener("input", () => { obj[key] = cleanBlock(el); changed(false, opts.anchor); });
+  el.addEventListener("keydown", e => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); const url = prompt("Link URL:"); if (url) document.execCommand("createLink", false, url); el.dispatchEvent(new Event("input")); }
+  });
+  el.addEventListener("paste", e => { e.preventDefault(); document.execCommand("insertText", false, e.clipboardData.getData("text/plain")); });
+  el.addEventListener("focus", () => document.execCommand("defaultParagraphSeparator", false, "p"));
+  return label ? h("label", { class: "f" }, label, el) : el;
+}
+
+// ---------- import an answered email
+async function importEmail({ text = "", eml = "" }) {
+  const r = await fetch("/api/qa/parse", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text, eml }) });
+  const d = await r.json();
+  if (d.error) return toast("Couldn't read that email: " + d.error);
+  const item = {
+    id: "q-" + Math.random().toString(36).slice(2, 8), date: d.date || today(),
+    name: d.name || "", question: d.question || "", answer: d.answer || "", published: false, isNew: true,
+  };
+  model.items.unshift(item);
+  const missing = [!d.found.question && "the question", !d.found.answer && "your answer"].filter(Boolean);
+  toast(missing.length ? `Card created, but I couldn't find ${missing.join(" or ")}. Fill it in by hand.` : "Card created from the email. Check it over, then Publish.");
+  pasted = ""; changed(true, item.id);
+}
+function renderImport() {
+  const drop = h("div", { class: "drop" }, "✉️ Drop your reply email here (.eml), or click to choose it");
+  const pick = file => { if (!file) return; const fr = new FileReader(); fr.onload = () => importEmail({ eml: fr.result }); fr.readAsDataURL(file); };
+  drop.onclick = () => { const fp = $("#emlPick"); fp.value = ""; fp.onchange = () => pick(fp.files[0]); fp.click(); };
+  drop.ondragover = e => { e.preventDefault(); drop.classList.add("over"); };
+  drop.ondragleave = () => drop.classList.remove("over");
+  drop.ondrop = e => { e.preventDefault(); drop.classList.remove("over"); pick(e.dataTransfer.files[0]); };
+  const ta = h("textarea", { rows: 5, placeholder: "…or paste the whole reply here: your answer at the top, the quoted question below it" });
+  ta.value = pasted; ta.oninput = () => { pasted = ta.value; };
+  return h("div", { class: "card" }, h("div", { class: "body" },
+    h("ol", { class: "steps" },
+      h("li", {}, "Questions arrive by email with a subject starting ", h("span", { class: "kbd" }, model.subjectTag), ". Make a mail rule on that text to file them in a folder."),
+      h("li", {}, "Reply to the email with your answer, as usual."),
+      h("li", {}, "Drag your sent reply from Mail into the box below (it saves as a .eml file), or copy and paste its text. You'll get a card with the question and your answer to edit, then Publish and Save.")),
+    drop,
+    h("label", { class: "f" }, "Paste instead", ta),
+    h("div", {}, h("button", { onclick: () => pasted.trim() ? importEmail({ text: pasted }) : toast("Paste the email text first") }, "Create card from pasted text"), " ",
+      h("button", { onclick: () => { const it = { id: "q-" + Math.random().toString(36).slice(2, 8), date: today(), name: "", question: "", answer: "", published: false, isNew: true }; model.items.unshift(it); changed(true); } }, "+ Blank card"))));
+}
+
+// ---------- cards
+function renderItem(it) {
+  const toggle = h("button", { class: it.published ? "" : "primary", onclick: () => {
+    if (!it.published && (!it.question.trim() || !it.answer.replace(/<[^>]+>/g, "").trim())) return toast("Add both the question and your answer before publishing");
+    it.published = !it.published; delete it.isNew; changed(true, it.published ? it.id : null);
+    toast(it.published ? "Published in the preview. Press Save to put it on qa.html." : "Moved back to drafts");
+  } }, it.published ? "Unpublish" : "Publish");
+  return h("div", { class: "card" + (it.isNew ? " isnew" : "") },
+    h("div", { class: "head" },
+      h("span", { class: "chip " + (it.published ? "pub" : "draft") }, it.published ? "Published" : "Draft"),
+      h("span", { class: "spacer" }), toggle,
+      h("button", { class: "danger", onclick: () => { if (confirm("Delete this card?")) { model.items.splice(model.items.indexOf(it), 1); changed(true); } } }, "Delete")),
+    h("div", { class: "body" },
+      h("div", { class: "row3" },
+        field(it, "name", "Asked by", { placeholder: "Their name", anchor: it.id }),
+        field(it, "date", "Date", { type: "date", anchor: it.id })),
+      h("div", { class: "exchange" },
+        h("div", { class: "bubble" }, h("span", { class: "badge q" }, "Q"),
+          field(it, "question", "Their question (you can tidy the wording)", { textarea: true, rows: 3, anchor: it.id })),
+        h("div", { class: "bubble" }, h("span", { class: "badge a" }, "A"),
+          rich(it, "answer", "Your answer (⌘B / ⌘I, ⌘K for a link)", { anchor: it.id, placeholder: "Your answer" })))));
+}
+function renderSettings() {
+  return h("details", { class: "card settings" }, h("summary", {}, "Page settings (intro text, where emails go)"),
+    h("div", { class: "body" },
+      field(model, "heading", "Page heading", { placeholder: "Q&A" }),
+      rich(model, "intro", "Intro text", { anchor: "qa" }),
+      field(model, "formHint", "Text under \"Ask a question\"", { textarea: true, rows: 2, anchor: "ask" }),
+      field(model, "subjectTag", "Email subject starts with (use this in your mail rule)"),
+      field(model, "ownerEmail", "Your email (fallback link, and reply-to when the asker gives no email)"),
+      field(model, "formEndpoint", "Form address (FormSubmit). After activating, you can swap the email for the random alias FormSubmit sends you.")));
+}
+function render() {
+  const panel = $("#panel"), y = panel.scrollTop; panel.innerHTML = "";
+  const drafts = model.items.filter(i => !i.published), pub = model.items.filter(i => i.published).sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+  panel.append(
+    h("h2", { class: "sec" }, "Add an answered question"), renderImport(),
+    h("h2", { class: "sec" }, `Drafts (${drafts.length})`), drafts.length ? drafts.map(renderItem) : h("p", { class: "empty" }, "No drafts. Import an email above."),
+    h("h2", { class: "sec" }, `Published (${pub.length})`), pub.length ? pub.map(renderItem) : h("p", { class: "empty" }, "Nothing published yet."),
+    h("h2", { class: "sec" }, "Settings"), renderSettings());
+  panel.scrollTop = y;
+}
+
+async function save() {
+  if (!dirty) return;
+  const clean = JSON.parse(JSON.stringify(model)); clean.items.forEach(i => delete i.isNew);
+  const r = await fetch("/api/qa/save", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(clean) });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok || d.error) return toast("Save failed: " + (d.error || r.status));
+  model.items.forEach(i => delete i.isNew); dirty = false; updateStatus(); render(); toast("Saved to qa.html");
+}
+$("#saveBtn").onclick = save;
+document.addEventListener("keydown", e => { if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "s") { e.preventDefault(); save(); } });
+window.addEventListener("beforeunload", e => { if (dirty) { e.preventDefault(); e.returnValue = ""; } });
+fetch("/api/qa").then(r => r.json()).then(m => { model = m; updateStatus(); render(); layoutPreview(); refreshPreview(); })
+  .catch(() => $("#status").textContent = "Couldn't reach the editor server");
+</script>
+</body>
+</html>
