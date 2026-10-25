@@ -11,14 +11,6 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<style>
-			/* Small tweaks for the blog list */
-			details.blog-post { margin: 1.25rem 0; border: 1px solid rgba(255,255,255,0.06); padding: 1rem; border-radius: 4px; background: rgba(255,255,255,0.01); }
-			details.blog-post summary { cursor: pointer; list-style: none; }
-			details.blog-post summary h3 { display: inline-block; margin: 0; }
-			.blog-meta { color: rgba(255,255,255,0.6); font-size: 0.9rem; margin-left: 0.5rem; }
-			.blog-content { margin-top: 0.75rem; }
-			.blog-content img { max-width: 100%; height: auto; display:block; margin-bottom: 0.75rem; border-radius:4px }
-
 			/* Blog post collapsible tweaks */
 			details.blog-post {
 				margin: 1.25rem 0;
@@ -50,7 +42,145 @@
 				margin-left: 0.5rem;
 			}
 			.blog-content { margin-top: 0.75rem; }
-			.blog-content img { max-width: 100%; height: auto; display:block; margin-bottom: 0.75rem; border-radius:4px }
+
+			/* Paper cards (same layout as books, with a drawn "first page" instead of a cover) */
+			.paper-list { display: flex; flex-direction: column; gap: 1.25rem; margin: 1rem 0 1.5rem 0; }
+			.paper { display: flex; gap: 1rem; align-items: flex-start; }
+			.paper a.page {
+				flex: 0 0 auto;
+				width: 90px;
+				height: 120px;
+				box-sizing: border-box;
+				padding: 9px 8px;
+				border: 0;
+				border-radius: 3px;
+				background: #fdfcf8;
+				box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+				display: flex;
+				flex-direction: column;
+				gap: 4px;
+				overflow: hidden;
+				text-decoration: none;
+				transition: transform 0.2s;
+			}
+			.paper a.page:hover { transform: translateY(-2px); }
+			.paper .page .venue {
+				align-self: flex-start;
+				font: bold 0.5rem/1 Helvetica, Arial, sans-serif;
+				letter-spacing: 0.05em;
+				text-transform: uppercase;
+				color: #fff;
+				background: var(--venue, #555);
+				padding: 2px 4px;
+				border-radius: 2px;
+			}
+			.paper .page .ptitle {
+				font: bold 0.5rem/1.25 Georgia, "Times New Roman", serif;
+				color: #222;
+				text-align: center;
+				margin: 2px 0;
+			}
+			.paper .page .lines {
+				flex: 1;
+				background: repeating-linear-gradient(to bottom, #d6d6d6 0 2px, transparent 2px 6px);
+			}
+			.paper .paper-info h4 { margin: 0 0 0.25rem 0; }
+			.paper .paper-info .paper-author {
+				color: rgba(60,60,60,0.7);
+				font-size: 0.9rem;
+				margin: 0 0 0.35rem 0;
+			}
+			.paper .paper-info .paper-venue {
+				font-size: 0.85rem;
+				font-style: italic;
+				color: rgba(60,60,60,0.7);
+				margin: 0 0 0.6rem 0;
+			}
+			.paper .paper-links { display: flex; gap: 0.5rem; margin: 0; }
+			.paper .paper-links a {
+				font-size: 0.75rem;
+				line-height: 1;
+				padding: 0.35rem 0.7rem;
+				border: solid 1px #ccc;
+				border-radius: 999px;
+				color: #555;
+				text-decoration: none;
+				transition: border-color 0.2s, color 0.2s;
+			}
+			.paper .paper-links a:hover { border-color: #49bf9d; color: #49bf9d; }
+			.paper .paper-info p:last-child { margin-bottom: 0; }
+
+			/* Book recommendation cards */
+			.book-list { display: flex; flex-direction: column; gap: 1.25rem; margin: 1rem 0 1.5rem 0; }
+			.book {
+				display: flex;
+				gap: 1rem;
+				align-items: flex-start;
+			}
+			.book a.cover { flex: 0 0 auto; border: 0; }
+			.book a.cover img {
+				width: 90px;
+				height: auto;
+				display: block;
+				border-radius: 3px;
+				box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+				transition: transform 0.2s;
+			}
+			.book a.cover:hover img { transform: translateY(-2px); }
+			.book .book-info h4 { margin: 0 0 0.25rem 0; }
+			.book .book-info .book-author {
+				color: rgba(60,60,60,0.7);
+				font-size: 0.9rem;
+				margin: 0 0 0.5rem 0;
+			}
+			.book .book-info p:last-child { margin-bottom: 0; }
+
+			/* Post type icons (popular science, mathematical detail) */
+			.post-kind {
+				position: relative;
+				flex: 0 0 auto;
+				width: 2.1rem;
+				height: 2.1rem;
+				margin-right: 0.75rem;
+				border-radius: 50%;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 0.95rem;
+				color: #fff;
+				background: var(--kind, #777);
+				box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+			}
+			.post-kind.popular { --kind: #e08e45; }
+			.post-kind.math { --kind: #3f6fb5; }
+			.post-kind[data-tip]::after {
+				content: attr(data-tip);
+				position: absolute;
+				left: 50%;
+				bottom: calc(100% + 6px);
+				transform: translateX(-50%);
+				white-space: nowrap;
+				font-size: 0.75rem;
+				line-height: 1;
+				padding: 0.35rem 0.55rem;
+				border-radius: 4px;
+				background: #222;
+				color: #fff;
+				opacity: 0;
+				pointer-events: none;
+				transition: opacity 0.15s;
+			}
+			.post-kind:hover::after { opacity: 1; }
+			.kind-key {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.4rem 1.25rem;
+				font-size: 0.85rem;
+				color: rgba(60,60,60,0.7);
+				margin: -0.5rem 0 0 0;
+			}
+			.kind-key span { display: inline-flex; align-items: center; }
+			.kind-key .post-kind { width: 1.5rem; height: 1.5rem; font-size: 0.7rem; margin-right: 0.4rem; box-shadow: none; }
 
 			/* Arrow icon for collapsible summary */
 			.arrow {
@@ -100,7 +230,11 @@
 			<section id="one">
 				<header class="major">
 					<h2>Blogs</h2>
-					<p>Short list of posts. Click a title to expand each post.</p>
+					<p data-edit="header-sub">Short list of posts. Click a title to expand each post.</p>
+					<p class="kind-key">
+						<span><span class="post-kind popular"><i class="fas fa-book-open"></i></span>Popular science</span>
+						<span><span class="post-kind math"><i class="fas fa-square-root-alt"></i></span>Mathematical detail</span>
+					</p>
 				</header>
 
 				<section class="box alt">
@@ -110,14 +244,39 @@
 							<!-- Post 1 -->
 							<details class="blog-post" open>
 								<summary>
-									<h3>Exploring the Galactic Halo</h3>
+									<span class="post-kind popular" data-tip="Popular science" aria-label="Popular science"><i class="fas fa-book-open"></i></span>
+									<h3 data-edit="post1-title">Science History Book Recommendations</h3>
 									<span class="blog-meta">Jan 1, 2026 — Physics</span>
 									<span class="arrow">&#9654;</span>
 								</summary>
 								<div class="blog-content">
-									<img src="images/fulls/01.jpg" alt="Post image" />
-									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi.</p>
-									<p>Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta.</p>
+									<p data-edit="post1-p1">More often than not, physics is taught as a collection of equations to memorize and plug numbers into. That picture could not be further from the truth. Science is done by humans (at least until recently; with the advent of AI the conversation gets much more complicated, and since many people are already chiming in, I will stay out of it here. See <a href="https://arxiv.org/abs/2602.10181">David Hogg's take (arXiv:2602.10181)</a> for a great discussion). The train of thought behind a result, which can take decades and many failed attempts, is as important to learn as the material itself if you intend to pursue physics as a career.</p>
+									<p data-edit="post1-p2">Below is a non-comprehensive list of books that I really enjoyed and that helped me put some of the physics I learned, and the physicists who came up with it, in context.</p>
+
+									<div class="book-list">
+										<div class="book">
+											<a class="cover" href="https://openlibrary.org/isbn/9781848310353"><img src="images/books/quantum-kumar.jpg" alt="Cover of Quantum by Manjit Kumar" /></a>
+											<div class="book-info">
+												<h4><a href="https://openlibrary.org/isbn/9781848310353">Quantum: Einstein, Bohr and the Great Debate About the Nature of Reality</a></h4>
+												<p class="book-author">Manjit Kumar</p>
+											</div>
+										</div>
+										<div class="book">
+											<a class="cover" href="https://openlibrary.org/isbn/9780465022106"><img src="images/books/strangest-man-farmelo.jpg" alt="Cover of The Strangest Man by Graham Farmelo" /></a>
+											<div class="book-info">
+												<h4><a href="https://openlibrary.org/isbn/9780465022106">The Strangest Man: The Hidden Life of Paul Dirac, Mystic of the Atom</a></h4>
+												<p class="book-author">Graham Farmelo</p>
+												<p data-edit="post1-book-dirac">A biography of Dirac. It is excellent until the final chapters, where some of the claims about Dirac giving birth to string theory are too speculative.</p>
+											</div>
+										</div>
+										<div class="book">
+											<a class="cover" href="https://openlibrary.org/isbn/9780198520498"><img src="images/books/niels-bohrs-times-pais.jpg" alt="Cover of Niels Bohr's Times by Abraham Pais" /></a>
+											<div class="book-info">
+												<h4><a href="https://openlibrary.org/isbn/9780198520498">Niels Bohr's Times, In Physics, Philosophy, and Polity</a></h4>
+												<p class="book-author">Abraham Pais</p>
+											</div>
+										</div>
+									</div>
 								</div>
 							</details>
 						</div>
@@ -126,14 +285,33 @@
 							<!-- Post 2 -->
 							<details class="blog-post">
 								<summary>
-									<h3>Dark Matter Phenomenology</h3>
+									<span class="post-kind math" data-tip="Mathematical detail" aria-label="Mathematical detail"><i class="fas fa-square-root-alt"></i></span>
+									<h3 data-edit="post2-title">Science History Articles</h3>
 									<span class="blog-meta">Dec 18, 2025 — Astroparticle</span>
 									<span class="arrow">&#9654;</span>
 								</summary>
 								<div class="blog-content">
-									<img src="images/fulls/02.jpg" alt="Post image" />
-									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-									<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+									<p data-edit="post2-p1">For those looking for more detailed accounts, here are some articles that have shocked and inspired me.</p>
+									<h4 data-edit="post2-h1">Noether's Theorem and Its Connection to General Relativity</h4>
+									<p data-edit="post2-p2">Unfortunately, I was introduced to Noether's theorem without the context that gives it its beauty. One of the most beautiful theorems in physics deserves a proper introduction. In fact, the theorem grew out of Noether's work with Hilbert and Klein on understanding energy conservation in general relativity. A lovely historical account, along with some mathematical details, can be found here (and in the references therein):</p>
+									<div class="paper-list">
+										<div class="paper">
+											<a class="page" href="https://arxiv.org/abs/1912.03269" style="--venue:#b31b1b" aria-label="Read on arXiv">
+												<span class="venue">arXiv</span>
+												<span class="ptitle">Emmy Noether on Energy Conservation in General Relativity</span>
+												<span class="lines"></span>
+											</a>
+											<div class="paper-info">
+												<h4><a href="https://arxiv.org/abs/1912.03269">Emmy Noether on Energy Conservation in General Relativity</a></h4>
+												<p class="paper-author">David E. Rowe</p>
+												<p class="paper-venue">arXiv:1912.03269 &middot; 2019</p>
+												<p class="paper-links">
+													<a href="https://arxiv.org/abs/1912.03269">Read &rarr;</a>
+													<a href="https://arxiv.org/pdf/1912.03269">PDF &darr;</a>
+												</p>
+											</div>
+										</div>
+									</div>
 								</div>
 							</details>
 						</div>
@@ -142,14 +320,31 @@
 							<!-- Post 3 -->
 							<details class="blog-post">
 								<summary>
-									<h3>Outreach in Physics Education</h3>
+									<span class="post-kind math" data-tip="Mathematical detail" aria-label="Mathematical detail"><i class="fas fa-square-root-alt"></i></span>
+									<h3 data-edit="post3-title">Incomplete and Incorrect Theories Should Be Encouraged</h3>
 									<span class="blog-meta">Nov 30, 2025 — Outreach</span>
 									<span class="arrow">&#9654;</span>
 								</summary>
 								<div class="blog-content">
-									<img src="images/fulls/03.jpg" alt="Post image" />
-									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sodales ligula in libero. Sed dignissim lacinia nunc.</p>
-									<p>Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor.</p>
+									<p data-edit="post3-p1">One thing that truly bothers me is how physics classes often move at a pace that strips away the years (or even decades) it took to develop not only a theory but also the intuition behind it. One of the most interesting examples, and one rarely discussed in undergraduate classes, is the history of the strong force. I stumbled upon it while reading the Wikipedia page on the Yukawa potential and its origins. Physicists wrestled with why the nucleus doesn't blow itself apart under the repulsion between its protons, and with whether the neutron is a composite particle (made up of an electron and a proton). Heisenberg, best known for his uncertainty principle, played a key role in refining our understanding of the strong force and in part inspired the work of Yukawa and later Fermi. Though his theory was incomplete and incorrect, it contained remarkable insights, such as isospin, and eventually paved the way to a coherent theory of the strong force. I truly see it as a necessary step in that development, and I think students should be encouraged to see incomplete and incorrect theories the same way: they are often a necessary step toward a coherent theory.</p>
+									<p data-edit="post3-p2">Below is an incomplete list of historical accounts of how the subject developed:</p>
+									<div class="paper-list">
+										<div class="paper">
+											<a class="page" href="https://doi.org/10.1119/1.15352" style="--venue:#1f4e79" aria-label="Read in American Journal of Physics">
+												<span class="venue">Am. J. Phys.</span>
+												<span class="ptitle">Nuclear Structure and Beta Decay (1932&ndash;1933)</span>
+												<span class="lines"></span>
+											</a>
+											<div class="paper-info">
+												<h4><a href="https://doi.org/10.1119/1.15352">Nuclear Structure and Beta Decay (1932&ndash;1933)</a></h4>
+												<p class="paper-author">Laurie M. Brown &amp; Helmut Rechenberg</p>
+												<p class="paper-venue">American Journal of Physics 56, 982&ndash;988 &middot; 1988</p>
+												<p class="paper-links">
+													<a href="https://doi.org/10.1119/1.15352">Read &rarr;</a>
+												</p>
+											</div>
+										</div>
+									</div>
 								</div>
 							</details>
 						</div>
