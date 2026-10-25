@@ -3,7 +3,7 @@
 Run from the repo root:   python3 _editor/server.py
 Then open:                http://localhost:8765
 
-  /research  edits About Me, Publications and Projects on projects.html
+  /research  edits About Me, Publications and Projects on index.html (the homepage)
   /blog      edits the text of blogs.html
   /qa        turns answered Q&A emails into cards on qa.html
 """
@@ -12,7 +12,7 @@ from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HERE)
-RESEARCH_PAGE = os.path.join(REPO, "projects.html")
+RESEARCH_PAGE = os.path.join(REPO, "index.html")
 RESEARCH_DATA = os.path.join(HERE, "research.json")
 BLOG_PAGE = os.path.join(REPO, "blogs.html")
 UPLOAD_DIR = os.path.join(REPO, "images", "research")

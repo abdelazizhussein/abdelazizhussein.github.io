@@ -114,8 +114,8 @@
   <span class="spacer"></span>
   <span class="status" id="status">Loading…</span>
   <a href="/blog">Blog editor</a>
-  <a href="/projects.html" target="_blank">Open saved page ↗</a>
-  <button class="primary" id="saveBtn" disabled>Save to projects.html</button>
+  <a href="/index.html" target="_blank">Open saved page ↗</a>
+  <button class="primary" id="saveBtn" disabled>Save to homepage</button>
 </header>
 
 <div class="wrap">
@@ -483,7 +483,7 @@ async function save() {
   const d = await r.json();
   if (!r.ok || d.error) return toast("Save failed: " + (d.error || r.status));
   model.publications.forEach(p => delete p.isNew);
-  dirty = false; updateStatus(); render(); toast("Saved to projects.html");
+  dirty = false; updateStatus(); render(); toast("Saved to homepage");
 }
 $("#saveBtn").onclick = save;
 document.addEventListener("keydown", e => { if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "s") { e.preventDefault(); save(); } });
