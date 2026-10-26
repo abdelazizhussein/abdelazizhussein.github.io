@@ -1,0 +1,83 @@
+/* "Old faculty page" look. Only active when the page is in retro mode
+   (assets/js/retro.js switches the theme styles off and this file on). */
+
+html.retro body {
+	background: #ddeeff;
+	color: #000000;
+	font-family: "Times New Roman", Times, serif;
+	font-size: 16px;
+	line-height: normal;
+	margin: 8px 12px;
+}
+html.retro a { color: #0000ee; }
+html.retro a:visited { color: #551a8b; }
+html.retro img { max-width: 100%; height: auto; border: 0; }
+
+/* Header: photo floated right, name, then plain contact lines */
+html.retro #header .avatar img { float: right; width: 180px; margin: 0 0 12px 16px; border: 1px solid #000; }
+html.retro #header h1 { font-size: 1.5em; margin: 0.4em 0 0.2em 0; }
+html.retro #header .button-block ul { list-style: none; padding: 0; margin: 0.8em 0 0 0; }
+html.retro #header .button-block li { display: inline; }
+html.retro #header .button-block li::before { content: "[ "; }
+html.retro #header .button-block li::after { content: " ]"; }
+html.retro #header .button-block a.active { font-weight: bold; color: #000; text-decoration: none; }
+html.retro .retro-card { margin: 0; }
+html.retro .retro-card .new { color: red; font-weight: bold; }
+
+html.retro #main { clear: both; }
+html.retro #main::before { content: ""; display: block; clear: both; margin: 12px 0; }
+html.retro h2 { font-size: 1.3em; margin: 1.2em 0 0.4em 0; color: #cc0000; }
+html.retro #header h1 strong { color: #000080; }
+html.retro summary h3 { color: #800000; }
+html.retro #main::before { border-top: 2px groove #808080; }
+html.retro h4 { margin: 0.8em 0 0.3em 0; }
+html.retro p { margin: 0.5em 0; }
+
+/* Publications: red markers like the old pages */
+html.retro ol.pubs { padding-left: 1.5em; }
+html.retro ol.pubs li { margin: 0.5em 0; }
+html.retro .pub-title { font-weight: bold; }
+html.retro .pub-title::before { content: "* "; color: red; }
+html.retro .pub-group { font-weight: bold; text-decoration: underline; margin-top: 1em; }
+
+/* Collapsible posts stay as plain <details> */
+html.retro details { margin: 0.6em 0; }
+html.retro summary { cursor: default; list-style: none; }
+html.retro summary::-webkit-details-marker { display: none; }
+html.retro summary h3 { display: inline; font-size: 1.1em; }
+html.retro summary .arrow,
+html.retro summary .post-kind,
+html.retro .kind-key { display: none; }
+html.retro .research-meta, html.retro .blog-meta { font-style: italic; font-size: 0.9em; }
+
+/* Figures: modest size, centered, with a border */
+html.retro figure { margin: 1em 0; text-align: center; }
+html.retro figure img { max-width: 560px; width: 100%; border: 1px solid #000; }
+html.retro figcaption { font-size: 0.9em; font-style: italic; }
+
+/* Blog: no fake paper thumbnails, small book covers */
+html.retro .paper .page { display: none; }
+html.retro .book { overflow: hidden; margin: 0.6em 0; }
+html.retro .book .cover img { float: left; width: 70px; margin: 0 10px 6px 0; border: 1px solid #000; }
+
+/* Q&A form: default browser controls */
+html.retro .ask-box { border: 2px inset #c0c0c0; background: #f0f0f0; padding: 8px; max-width: 640px; }
+html.retro .ask-box input[type=text], html.retro .ask-box input[type=email], html.retro .ask-box textarea { width: 100%; box-sizing: border-box; font-family: inherit; }
+html.retro .ask-box .hp { display: none; }
+html.retro .qa-card { border-top: 1px solid #808080; padding: 0.4em 0; }
+html.retro .qa-badge { font-weight: bold; color: red; margin-right: 0.3em; }
+
+/* Footer */
+html.retro #footer { clear: both; margin-top: 2em; border-top: 2px solid #808080; padding-top: 0.5em; font-size: 0.9em; }
+html.retro #footer ul { list-style: none; padding: 0; margin: 0.2em 0; }
+html.retro #footer li { display: inline; margin-right: 0.6em; }
+html.retro .retro-foot { font-size: 0.85em; margin-top: 0.6em; }
+
+/* The theme's script moves its footer into the sidebar; in retro mode a
+   copy (#retro-footer) is shown at the bottom of the page instead */
+html.retro #footer { display: none; }
+html.retro #retro-footer { clear: both; margin-top: 2em; border-top: 2px groove #808080; padding-top: 0.5em; font-size: 0.9em; }
+html.retro #retro-footer ul { list-style: none; padding: 0; margin: 0.2em 0; }
+html.retro #retro-footer li { display: inline; margin-right: 0.6em; }
+html.retro #header .avatar img { margin-top: 30px; }
+html.retro ul.actions { list-style: none; padding: 0; }
