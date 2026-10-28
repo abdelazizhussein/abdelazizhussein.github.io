@@ -81,3 +81,8 @@ html.retro #retro-footer ul { list-style: none; padding: 0; margin: 0.2em 0; }
 html.retro #retro-footer li { display: inline; margin-right: 0.6em; }
 html.retro #header .avatar img { margin-top: 4px; }
 html.retro ul.actions { list-style: none; padding: 0; }
+
+html.retro .ai-note { font-size: 0.9em; font-style: italic; background: #e8e8e8; border: 2px outset #c0c0c0; padding: 6px 10px; }
+html.retro .ai-note .ai-title { display: block; font-size: 1.15em; font-style: normal; margin-bottom: 0.15em; }
+html.retro a.retro-icon img { width: 22px; height: 22px; vertical-align: -5px; margin-right: 4px; border: 0; }
+html.retro a.retro-icon img[src*="github"] { width: 28px; height: 28px; vertical-align: -8px; }

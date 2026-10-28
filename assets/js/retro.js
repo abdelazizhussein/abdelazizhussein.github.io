@@ -60,7 +60,9 @@
 			card.innerHTML = "Physics PhD Student<br>" +
 				"<a href=\"https://physics.mit.edu/\">Department of Physics</a>, Massachusetts Institute of Technology<br>" +
 				"<a href=\"https://space.mit.edu/\">MIT Kavli Institute for Astrophysics and Space Research</a><br>" +
-				"E-mail: <a href=\"mailto:abdelh@mit.edu\">abdelh@mit.edu</a>";
+				"E-mail: <a href=\"mailto:abdelh@mit.edu\">abdelh@mit.edu</a><br>" +
+				"<a class=\"retro-icon\" href=\"https://orcid.org/0000-0002-5560-8668\"><img src=\"images/icons/orcid.svg\" alt=\"\">ORCID</a> | " +
+				"<a class=\"retro-icon\" href=\"https://github.com/abdelazizhussein?tab=repositories\"><img src=\"images/icons/github.png\" alt=\"\">GitHub</a>";
 			name.parentNode.insertBefore(card, name.nextSibling);
 		}
 		var foot = document.createElement("div");
@@ -68,6 +70,8 @@
 		foot.className = "retro-only";
 		var orig = document.querySelector("#footer .inner");
 		if (orig) foot.innerHTML = orig.innerHTML;
+		var icons = foot.querySelector("ul.icons");
+		if (icons) icons.parentNode.removeChild(icons); // these links are in the header in retro mode
 		document.body.appendChild(foot);
 		var d = new Date(document.lastModified);
 		var when = isNaN(d) ? "" : d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
