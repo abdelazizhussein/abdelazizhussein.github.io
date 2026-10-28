@@ -45,8 +45,8 @@
 
 	function styleButton(btn, retro) {
 		btn.textContent = retro ? "Back to grad student mode ✨" : "What if I were faculty?";
-		btn.style.cssText = "position:fixed;top:10px;right:10px;z-index:10000;cursor:pointer;" + (retro
-			? "font:13px 'Times New Roman',serif;"
+		btn.style.cssText = "position:fixed;right:10px;z-index:10000;cursor:pointer;" + (retro ? "bottom:10px;" : "top:10px;") + (retro
+			? "font:16px 'Times New Roman',serif;padding:4px 10px;"
 			: "font:600 12px/1 'Source Sans Pro',Helvetica,sans-serif;letter-spacing:.04em;padding:.6em 1em;" +
 			  "height:auto;line-height:1;border-radius:999px;border:1px solid #ccc;background:rgba(255,255,255,.92);" +
 			  "color:#444;box-shadow:0 2px 8px rgba(0,0,0,.12);text-transform:none;");

@@ -5,8 +5,8 @@ html.retro body {
 	background: #ddeeff;
 	color: #000000;
 	font-family: "Times New Roman", Times, serif;
-	font-size: 16px;
-	line-height: normal;
+	font-size: 18px;
+	line-height: 1.25;
 	margin: 8px 12px;
 }
 html.retro a { color: #0000ee; }
@@ -14,10 +14,10 @@ html.retro a:visited { color: #551a8b; }
 html.retro img { max-width: 100%; height: auto; border: 0; }
 
 /* Header: photo floated right, name, then plain contact lines */
-html.retro #header .avatar img { float: right; width: 180px; margin: 0 0 12px 16px; border: 1px solid #000; }
+html.retro #header .avatar img { float: right; width: 168px; margin: 0 0 12px 16px; border: 1px solid #000; }
 html.retro #header h1 { font-size: 1.5em; margin: 0.4em 0 0.2em 0; }
 html.retro #header .button-block ul { list-style: none; padding: 0; margin: 0.8em 0 0 0; }
-html.retro #header .button-block li { display: inline; }
+html.retro #header .button-block li { display: inline; font-size: 1.15em; }
 html.retro #header .button-block li::before { content: "[ "; }
 html.retro #header .button-block li::after { content: " ]"; }
 html.retro #header .button-block a.active { font-weight: bold; color: #000; text-decoration: none; }
@@ -79,5 +79,5 @@ html.retro #footer { display: none; }
 html.retro #retro-footer { clear: both; margin-top: 2em; border-top: 2px groove #808080; padding-top: 0.5em; font-size: 0.9em; }
 html.retro #retro-footer ul { list-style: none; padding: 0; margin: 0.2em 0; }
 html.retro #retro-footer li { display: inline; margin-right: 0.6em; }
-html.retro #header .avatar img { margin-top: 30px; }
+html.retro #header .avatar img { margin-top: 4px; }
 html.retro ul.actions { list-style: none; padding: 0; }
