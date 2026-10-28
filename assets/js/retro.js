@@ -62,7 +62,8 @@
 				"<a href=\"https://space.mit.edu/\">MIT Kavli Institute for Astrophysics and Space Research</a><br>" +
 				"E-mail: <a href=\"mailto:abdelh@mit.edu\">abdelh@mit.edu</a><br>" +
 				"<a class=\"retro-icon\" href=\"https://orcid.org/0000-0002-5560-8668\"><img src=\"images/icons/orcid.svg\" alt=\"\">ORCID</a> | " +
-				"<a class=\"retro-icon\" href=\"https://github.com/abdelazizhussein?tab=repositories\"><img src=\"images/icons/github.png\" alt=\"\">GitHub</a>";
+				"<a class=\"retro-icon\" href=\"https://github.com/abdelazizhussein?tab=repositories\"><img src=\"images/icons/github.png\" alt=\"\">GitHub</a> | " +
+				"<a class=\"retro-icon\" href=\"https://inspirehep.net/authors/2897354?ui-citation-summary=true&amp;ui-exclude-self-citations=true\"><img src=\"images/icons/inspire.png\" alt=\"\">INSPIRE</a>";
 			name.parentNode.insertBefore(card, name.nextSibling);
 		}
 		var foot = document.createElement("div");
