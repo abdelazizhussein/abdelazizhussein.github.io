@@ -8,6 +8,15 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<!-- Google Tag Manager (sends visits to Google Analytics). Only runs on the live site, so the local editor isn't counted. -->
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			if (location.hostname === "abdelazizhussein.github.io") {
+				gtag('js', new Date());
+				document.head.appendChild(Object.assign(document.createElement("script"), { async: true, src: "https://www.googletagmanager.com/gtm.js?id=GTM-WH5MWW78" }));
+			}
+		</script>
 		<title>Q&amp;A &ndash; Abdelaziz Hussein</title>
 		<meta name="description" content="Ask Abdelaziz Hussein, an MIT physics PhD student, about life in academia, applying to grad school or postdocs, and research." />
 		<link rel="canonical" href="https://abdelazizhussein.github.io/qa.html" />
