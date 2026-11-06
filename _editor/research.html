@@ -268,7 +268,8 @@ function renderPubs() {
   return [
     h("h2", { class: "sec" }, "Publications"),
     h("p", { class: "help" }, "Papers where you're 1st or 2nd author go under Publications; the rest go under Nth author (decided by your place in the author list). Newest first. Use the checkbox to hide a paper. ",
-      "\"Check ORCID\" looks up your ORCID record (", model.me.orcid, "), skips talks and conference proceedings, adds new papers, and fills in journal details once a preprint is published."),
+      "\"Check ORCID\" looks up your ORCID record (", model.me.orcid, "), skips talks and conference proceedings, adds new papers, and fills in journal details once a preprint is published. ",
+      "New papers on your INSPIRE profile are also added automatically every day (pull the latest changes before editing). To drop a paper, hide it rather than deleting it, or the next sync adds it back."),
     h("div", { class: "addbar" },
       h("button", { onclick: syncPubs, id: "syncBtn" }, "⟳ Check ORCID for new papers"),
       h("button", { onclick: () => { const p = { id: uid("pub"), title: "New paper", authors: [`${model.me.family}, ${model.me.initial}.`], arxiv: "", doi: "", venue: "", code: "", date: new Date().toISOString().slice(0, 10), year: String(new Date().getFullYear()), role: "first", hidden: false }; model.publications.push(p); openPubs.add(p.id); changed(true); } }, "+ Add publication manually")),
@@ -299,7 +300,7 @@ function renderPub(p) {
         field(p, "venue", "Journal (leave empty for a preprint)", { placeholder: "The Astrophysical Journal 1002, 8" }),
         field(p, "doi", "DOI", { placeholder: "10.3847/…" })),
       field(p, "code", "Code / data link (optional)", { placeholder: "https://github.com/…" }),
-      h("div", {}, h("button", { class: "danger", onclick: () => { if (confirm("Delete this publication from the page?")) { model.publications.splice(model.publications.indexOf(p), 1); changed(true); } } }, "Delete publication")),
+      h("div", {}, h("button", { class: "danger", onclick: () => { if (confirm("Delete this publication from the page? If it's on INSPIRE, the daily sync will add it back; untick Show to hide it instead.")) { model.publications.splice(model.publications.indexOf(p), 1); changed(true); } } }, "Delete publication")),
     ) : null);
   return card;
 }

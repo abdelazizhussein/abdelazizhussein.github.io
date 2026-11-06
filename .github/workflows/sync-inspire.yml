@@ -1,0 +1,40 @@
+# Checks the INSPIRE-HEP author profile every day and commits any new papers
+# (or new journal details) to the homepage. Run it by hand from the Actions tab
+# with "Run workflow".
+name: Sync publications from INSPIRE
+
+on:
+  schedule:
+    - cron: "30 7 * * *"  # every day at 07:30 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-inspire
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Check INSPIRE for new papers
+        run: python3 _editor/sync_inspire.py | tee "$RUNNER_TEMP/sync.txt"
+
+      - name: Commit and push
+        run: |
+          if git diff --quiet; then
+            echo "Nothing new."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -a -m "Update publications from INSPIRE" -m "$(cat "$RUNNER_TEMP/sync.txt")"
+          git pull --rebase
+          git push

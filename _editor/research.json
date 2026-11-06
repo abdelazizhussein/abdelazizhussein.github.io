@@ -2,7 +2,8 @@
   "me": {
     "family": "Hussein",
     "initial": "A",
-    "orcid": "0000-0002-5560-8668"
+    "orcid": "0000-0002-5560-8668",
+    "inspire": "2897354"
   },
   "about": {
     "heading": "About Me",
@@ -162,6 +163,22 @@
       "year": "2022",
       "hidden": false,
       "id": "pub7"
+    },
+    {
+      "title": "The Cosmology of Hawking Axions",
+      "authors": [
+        "Hussein, Abdelaziz",
+        "Krnjaic, Gordan",
+        "Verner, Sarunas"
+      ],
+      "arxiv": "2611.05747",
+      "doi": "",
+      "venue": "",
+      "code": "",
+      "date": "2026-11-03",
+      "year": "2026",
+      "hidden": false,
+      "id": "pub8"
     }
   ],
   "projectsHeading": "Research Projects",

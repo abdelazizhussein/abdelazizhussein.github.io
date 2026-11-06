@@ -187,7 +187,15 @@ def build_page(m):
     return splice(open(RESEARCH_PAGE, encoding="utf-8").read(), render_main(m))
 
 
-# ---------------------------------------------------------------- ORCID sync
+def write_research(m):
+    """Write index.html and research.json from the model."""
+    page = build_page(m)
+    open(RESEARCH_PAGE, "w", encoding="utf-8").write(page)
+    with open(RESEARCH_DATA, "w", encoding="utf-8") as f:
+        json.dump(m, f, indent=2, ensure_ascii=False)
+
+
+# ---------------------------------------------------------------- ORCID / INSPIRE sync
 
 JOURNALS = {
     "Astrophys.J.": "The Astrophysical Journal", "Astrophys.J.Lett.": "The Astrophysical Journal Letters",
@@ -208,11 +216,75 @@ def get_json(url, accept="application/json"):
         return json.load(r)
 
 
+INSPIRE_FIELDS = "titles,authors.full_name,document_type,publication_info,dois,preprint_date,earliest_date,arxiv_eprints"
+
+
 def from_inspire(q):
-    url = "https://inspirehep.net/api/literature?" + urllib.parse.urlencode(
-        {"q": q, "fields": "titles,authors.full_name,document_type,publication_info,dois,preprint_date,arxiv_eprints,imprints"})
+    url = "https://inspirehep.net/api/literature?" + urllib.parse.urlencode({"q": q, "fields": INSPIRE_FIELDS})
     hits = get_json(url)["hits"]["hits"]
     return hits[0]["metadata"] if hits else None
+
+
+def inspire_to_pub(rec):
+    """An INSPIRE literature record -> a publication entry for research.json."""
+    pub = {"title": rec["titles"][0]["title"],
+           "authors": [a["full_name"] for a in rec.get("authors", [])],
+           "arxiv": (rec.get("arxiv_eprints") or [{}])[0].get("value", ""),
+           "doi": (rec.get("dois") or [{}])[0].get("value", ""),
+           "venue": "", "code": "", "date": rec.get("preprint_date") or "", "year": ""}
+    info = next((i for i in rec.get("publication_info", []) if i.get("journal_title")), None)
+    if info:
+        vol, page = info.get("journal_volume", ""), info.get("artid") or info.get("page_start", "")
+        pub["venue"] = " ".join(x for x in [JOURNALS.get(info["journal_title"], info["journal_title"]),
+                                            vol + ("," if vol and page else ""), page] if x)
+        pub["date"] = pub["date"] or str(info.get("year", ""))
+    pub["date"] = pub["date"] or rec.get("earliest_date", "")
+    pub["year"] = pub["date"][:4]
+    return pub
+
+
+def fetch_inspire(author_id):
+    """All papers on an INSPIRE author profile, minus talks, proceedings and theses."""
+    url = "https://inspirehep.net/api/literature?" + urllib.parse.urlencode(
+        {"q": f"authors.recid:{author_id}", "size": 250, "sort": "mostrecent", "fields": INSPIRE_FIELDS})
+    pubs = []
+    while url:
+        d = get_json(url)
+        for h in d["hits"]["hits"]:
+            if not SKIP_INSPIRE & set(h["metadata"].get("document_type", [])):
+                pubs.append(inspire_to_pub(h["metadata"]))
+        url = d.get("links", {}).get("next")
+    return pubs
+
+
+def pub_keys(p):
+    arxiv = re.sub(r"^arxiv:", "", (p.get("arxiv") or "").strip(), flags=re.I).lower()
+    title = re.sub(r"[^a-z0-9]", "", (p.get("title") or "").lower())
+    return [k for k in (arxiv and "arxiv:" + arxiv, p.get("doi") and "doi:" + p["doi"].strip().lower(),
+                        title and "title:" + title) if k]
+
+
+def merge_publications(m, found):
+    """Add papers that aren't on the site yet and fill in missing journal/DOI/arXiv details.
+    Never removes or rewrites an existing entry, so hand edits and hidden papers are kept."""
+    pubs = m.setdefault("publications", [])
+    index = {k: p for p in reversed(pubs) for k in pub_keys(p)}
+    added, updated = [], []
+    for f in found:
+        ex = next((index[k] for k in pub_keys(f) if k in index), None)
+        if ex is None:
+            n = max((int(x.group(1)) for p in pubs if (x := re.fullmatch(r"pub(\d+)", p.get("id", "")))), default=0) + 1
+            ex = {**f, "hidden": False, "id": f"pub{n}"}
+            pubs.append(ex)
+            added.append(ex)
+        else:
+            fill = {k: f[k] for k in ("doi", "venue", "arxiv") if f.get(k) and not (ex.get(k) or "").strip()}
+            if fill:
+                ex.update(fill)
+                updated.append(ex)
+        for k in pub_keys(ex):
+            index.setdefault(k, ex)
+    return added, updated
 
 
 def sync_publications(orcid):
@@ -235,19 +307,9 @@ def sync_publications(orcid):
         if rec:
             if SKIP_INSPIRE & set(rec.get("document_type", [])):
                 skipped.append(title); continue
-            pub["title"] = rec["titles"][0]["title"]
-            pub["authors"] = [a["full_name"] for a in rec.get("authors", [])]
-            pub["date"] = rec.get("preprint_date") or ""
-            info = next((i for i in rec.get("publication_info", []) if i.get("journal_title")), None)
-            if info:
-                j = JOURNALS.get(info["journal_title"], info["journal_title"])
-                pub["venue"] = " ".join(x for x in [j, info.get("journal_volume", "") + ("," if info.get("artid") or info.get("page_start") else ""),
-                                                    info.get("artid") or info.get("page_start", "")] if x).strip()
-                pub["date"] = pub["date"] or str(info.get("year", ""))
-            if rec.get("dois"):
-                pub["doi"] = rec["dois"][0]["value"]
-            if not pub["arxiv"] and rec.get("arxiv_eprints"):
-                pub["arxiv"] = rec["arxiv_eprints"][0]["value"]
+            ip = inspire_to_pub(rec)
+            pub.update(title=ip["title"], authors=ip["authors"], date=ip["date"], venue=ip["venue"],
+                       doi=ip["doi"] or pub["doi"], arxiv=pub["arxiv"] or ip["arxiv"])
         elif doi:
             try:
                 m = get_json(f"https://api.crossref.org/works/{urllib.parse.quote(doi)}")["message"]
@@ -572,11 +634,8 @@ class Handler(SimpleHTTPRequestHandler):
                 self.send(page.replace("<head>", "<head>" + base, 1), "text/html")
             elif path == "/api/research/save":
                 m = self.body()
-                page = build_page(m)
                 backup(RESEARCH_PAGE)
-                open(RESEARCH_PAGE, "w", encoding="utf-8").write(page)
-                with open(RESEARCH_DATA, "w", encoding="utf-8") as f:
-                    json.dump(m, f, indent=2, ensure_ascii=False)
+                write_research(m)
                 self.send({"ok": True})
             elif path == "/api/qa/preview":
                 page = build_qa_page(self.body(), preview=True)
